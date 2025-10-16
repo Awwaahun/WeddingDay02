@@ -62,8 +62,8 @@ export default function GuestBook() {
     <div className="py-20 bg-white">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-serif text-gray-800 mb-4">Guest Book</h2>
-          <p className="text-gray-600">Leave your wishes and blessings for the happy couple</p>
+          <h2 className="text-4xl md:text-5xl font-serif text-gray-800 mb-4">Buku Tamu</h2>
+          <p className="text-gray-600">Tinggalkan pesan dan doa untuk pasangan yang berbahagia</p>
         </div>
 
         <div className="max-w-4xl mx-auto">
@@ -77,7 +77,7 @@ export default function GuestBook() {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500"
-                  placeholder="Your name"
+                  placeholder="Nama Kamu"
                 />
               </div>
               <div>
@@ -87,7 +87,7 @@ export default function GuestBook() {
                   onChange={(e) => setMessage(e.target.value)}
                   rows={3}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500"
-                  placeholder="Share your wishes..."
+                  placeholder="Apa Harapan Kamu..."
                 ></textarea>
               </div>
               <button
@@ -96,7 +96,7 @@ export default function GuestBook() {
                 className="w-full bg-rose-500 hover:bg-rose-600 text-white py-3 rounded-lg font-medium transition-all duration-300 flex items-center justify-center space-x-2 disabled:opacity-50 hover:scale-105 hover:shadow-lg"
               >
                 <Send size={18} />
-                <span>{submitting ? 'Sending...' : 'Send Wishes'}</span>
+                <span>{submitting ? 'Kirim...' : 'Kirim Harapan'}</span>
               </button>
             </div>
           </form>

@@ -3,25 +3,25 @@ import { useScrollAnimation } from '../hooks/useScrollAnimation';
 
 export default function Couple() {
   const bride = {
-    name: 'Sarah Johnson',
-    fullName: 'Sarah Elizabeth Johnson',
-    role: 'The Bride',
-    image: 'https://images.pexels.com/photos/1024996/pexels-photo-1024996.jpeg?auto=compress&cs=tinysrgb&w=800',
-    bio: 'A passionate architect who loves art, coffee, and traveling to hidden gems around the world. Sarah believes in creating beautiful spaces and meaningful memories.',
-    parents: 'Daughter of Mr. & Mrs. Robert Johnson',
-    instagram: '@sarahjohnson',
+    name: 'Sarah',
+    fullName: 'Sarah Anggraini',
+    role: 'Mempelai Wanita',
+    image: 'https://files.catbox.moe/ye1ccs.png?auto=compress&cs=tinysrgb&w=800',
+    bio: 'Seorang arsitek penuh semangat yang mencintai seni, kopi, dan menjelajahi tempat-tempat tersembunyi di seluruh dunia. Sarah percaya pada penciptaan ruang yang indah dan kenangan yang bermakna.',
+    parents: 'Putri dari Bapak Dedy & Ibu Martina',
+    instagram: '@sarahanggraini',
     email: 'sarah@example.com',
   };
 
   const groom = {
-    name: 'James Anderson',
-    fullName: 'James Michael Anderson',
-    role: 'The Groom',
-    image: 'https://images.pexels.com/photos/1043474/pexels-photo-1043474.jpeg?auto=compress&cs=tinysrgb&w=800',
-    bio: 'A software engineer with a love for hiking, photography, and cooking new recipes. James finds joy in solving problems and exploring nature.',
-    parents: 'Son of Mr. & Mrs. David Anderson',
-    instagram: '@jamesanderson',
-    email: 'james@example.com',
+    name: 'Adam',
+    fullName: 'Adam Kurniawan',
+    role: 'Mempelai Pria',
+    image: 'https://files.catbox.moe/7c4cqd.png?auto=compress&cs=tinysrgb&w=800',
+    bio: 'Seorang Software Engineer yang gemar mendaki, fotografi, dan memasak resep-resep baru. Adam menemukan kegembiraan dalam memecahkan masalah dan menjelajahi alam.',
+    parents: 'Putra dari Bapak Martono & Ibu Widya',
+    instagram: '@adamkurniawan',
+    email: 'adam@example.com',
   };
 
   const CoupleCard = ({ person, reverse }: { person: typeof bride; reverse?: boolean }) => {
@@ -87,8 +87,8 @@ export default function Couple() {
     <div className="py-20 bg-gradient-to-br from-orange-50 via-rose-50 to-pink-50">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-serif text-gray-800 mb-4">Meet The Couple</h2>
-          <p className="text-gray-600">Two souls, one heart</p>
+          <h2 className="text-4xl md:text-5xl font-serif text-gray-800 mb-4">Perkenalkan Kami</h2>
+          <p className="text-gray-600">Dua Jiwa, Satu Hati</p>
         </div>
 
         <div className="max-w-6xl mx-auto space-y-20">

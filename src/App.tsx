@@ -1,5 +1,6 @@
-import { Heart, Calendar, MapPin, Gift, Users, Clock, MessageCircle, UserCircle, Wallet } from 'lucide-react';
-import { useState, useEffect } from 'react';
+
+import React, { useState, useEffect } from 'react';
+import { Heart, Calendar, Users, Gift, Wallet, MessageCircle, UserCircle, Send, Film } from 'lucide-react';
 import Hero from './components/Hero';
 import Countdown from './components/Countdown';
 import Couple from './components/Couple';
@@ -9,97 +10,170 @@ import Gallery from './components/Gallery';
 import Donation from './components/Donation';
 import RSVP from './components/RSVP';
 import GuestBook from './components/GuestBook';
+import LoadingScreen from './components/LoadingScreen';
+import InvitationModal from './components/InvitationModal';
+import FloralDecorations from './components/FloralDecorations';
+import { useInvitation } from './hooks/useInvitation';
+import MusicPlayer from './components/MusicPlayer';
+import PrayerDisplay from './components/PrayerDisplay';
+import PrayerLetter from './components/PrayerLetter';
+import CinematicIntro from './components/CinematicIntro';
 
 function App() {
   const [scrolled, setScrolled] = useState(false);
+  const [activeSection, setActiveSection] = useState('hero');
+  const { isLoading, showInvitation, handleOpenInvitation } = useInvitation();
+  const [mainVisible, setMainVisible] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [showMusicButton, setShowMusicButton] = useState(false);
+  const [playMusicTrigger, setPlayMusicTrigger] = useState(false);
+  const [showCinematic, setShowCinematic] = useState(false);
+
 
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
+      
+      const sections = ['hero', 'couple', 'story', 'event', 'gallery', 'donation', 'rsvp', 'prayer'];
+      for (const section of sections) {
+        const element = document.getElementById(section);
+        if (element) {
+          const rect = element.getBoundingClientRect();
+          if (rect.top <= window.innerHeight / 2 && rect.bottom >= window.innerHeight / 2) {
+            if (activeSection !== section) {
+              setActiveSection(section);
+            }
+            break;
+          }
+        }
+      }
     };
+    
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [activeSection]);
+
+  useEffect(() => {
+    if (showInvitation) setIsModalOpen(true);
+  }, [showInvitation]);
+
+  const onInvitationOpened = () => {
+    handleOpenInvitation();
+    setIsModalOpen(false);
+    setTimeout(() => {
+      setMainVisible(true);
+      document.body.style.overflow = 'auto';
+      setShowMusicButton(true);
+      setPlayMusicTrigger(true);
+    }, 500);
+  };
+
+  useEffect(() => {
+    if (isLoading || isModalOpen) {
+      document.body.style.overflow = 'hidden';
+    } else if (!showCinematic) {
+      document.body.style.overflow = 'auto';
+    }
+  }, [isLoading, isModalOpen, showCinematic]);
 
   const scrollToSection = (id: string) => {
+    setActiveSection(id);
     const element = document.getElementById(id);
     element?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  if (isLoading) return <LoadingScreen />;
+
   return (
-    <div className="min-h-screen bg-white">
-      {/* Navigation */}
-      <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${
-        scrolled ? 'bg-white shadow-md py-4' : 'bg-transparent py-6'
-      }`}>
-        <div className="container mx-auto px-4">
-          <div className="flex justify-center space-x-4 md:space-x-8">
-            {[
-              { icon: Heart, label: 'Home', id: 'hero' },
-              { icon: UserCircle, label: 'Couple', id: 'couple' },
-              { icon: Users, label: 'Story', id: 'story' },
-              { icon: Calendar, label: 'Event', id: 'event' },
-              { icon: Gift, label: 'Gallery', id: 'gallery' },
-              { icon: Wallet, label: 'Gift', id: 'donation' },
-              { icon: MessageCircle, label: 'RSVP', id: 'rsvp' },
-            ].map((item) => (
+    <>
+      <InvitationModal isOpen={isModalOpen} onOpen={onInvitationOpened} />
+      <CinematicIntro show={showCinematic} onClose={() => setShowCinematic(false)} />
+
+
+      <div className={`transition-opacity duration-1000 ease-in ${mainVisible ? 'opacity-100' : 'opacity-0'}`}>
+        <div className="min-h-screen bg-background text-text font-sans overflow-x-hidden relative">
+          
+          {mainVisible && <FloralDecorations activeSection={activeSection} />}
+          
+          <nav
+            className={`fixed top-0 w-full z-[60] transition-all duration-300 ${
+              scrolled ? 'bg-white/80 backdrop-blur-sm shadow-md py-4' : 'bg-transparent py-6'
+            }`}
+          >
+            <div className="container mx-auto px-4">
+              <div className="flex justify-center items-center space-x-3 md:space-x-6">
+                {[
+                  { icon: Heart, label: 'Home', id: 'hero' },
+                  { icon: UserCircle, label: 'Couple', id: 'couple' },
+                  { icon: Users, label: 'Story', id: 'story' },
+                  { icon: Calendar, label: 'Event', id: 'event' },
+                  { icon: Gift, label: 'Gallery', id: 'gallery' },
+                  { icon: Wallet, label: 'Gift', id: 'donation' },
+                  { icon: MessageCircle, label: 'RSVP', id: 'rsvp' },
+                  { icon: Send, label: 'Prayer', id: 'prayer' },
+                ].map((item) => (
+                  <button
+                    key={item.id}
+                    onClick={() => scrollToSection(item.id)}
+                    className={`flex flex-col md:flex-row items-center space-x-0 md:space-x-2 transition-colors duration-300 ${
+                      scrolled ? 'text-text/80 hover:text-primary' : 'text-white/90 hover:text-white'
+                    } ${activeSection === item.id ? (scrolled ? 'text-primary' : 'text-white font-bold') : ''}`}
+                  >
+                    <item.icon size={18} />
+                    <span className="hidden md:inline text-sm font-medium">{item.label}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          </nav>
+
+          <main>
+            <div id="hero"><Hero /></div>
+            <Countdown />
+            <div id="couple"><Couple /></div>
+            <div id="story"><Story /></div>
+            <div id="event"><EventDetails /></div>
+            <div id="gallery"><Gallery /></div>
+            <div id="donation"><Donation /></div>
+            <div id="rsvp"><RSVP /></div>
+            <div id="prayer"><PrayerDisplay /></div>
+            <PrayerLetter />
+            <GuestBook />
+          </main>
+
+          {showMusicButton && (
+            <MusicPlayer
+              lyrics={[
+                { time: 19, text: "Your morning eyes, I could stare like watching stars" },
+                { time: 26, text: "I could walk you by, and I'll tell without a thought" },
+                { time: 32, text: "You'd be mine, would you mind if I took your hand tonight?" },
+                { time: 40, text: "Know you're all that I want this life" },
+              ]}
+              audioSrc="https://files.catbox.moe/phz0pi.mp3"
+              initialShowLyrics={false}
+              autoPlay={playMusicTrigger}
+              autoPlayLyrics={playMusicTrigger}
+            />
+          )}
+
+          <footer className="bg-gray-900 text-white py-12 relative z-10">
+            <div className="container mx-auto px-4 text-center">
+              <Heart className="inline-block text-primary mb-2" size={24} />
+              <p className="font-serif text-lg">Adam & Sarah</p>
+              <p className="text-sm">Made with love for our special day</p>
               <button
-                key={item.id}
-                onClick={() => scrollToSection(item.id)}
-                className={`flex items-center space-x-2 transition-colors ${
-                  scrolled ? 'text-gray-700 hover:text-rose-600' : 'text-white hover:text-rose-200'
-                }`}
+                onClick={() => setShowCinematic(true)}
+                className="mt-4 px-4 py-3 bg-rose-500 hover:bg-rose-600 text-white rounded-lg font-medium transition-all duration-300 inline-flex items-center justify-center space-x-2 disabled:opacity-50 hover:scale-105 hover:shadow-lg"
               >
-                <item.icon size={18} />
-                <span className="hidden md:inline text-sm font-medium">{item.label}</span>
+                <Film size={20} />
+                <span>Watch Our Cinematic Story</span>
               </button>
-            ))}
-          </div>
+              <p className="text-xs text-gray-400 mt-6">© 2025 Adam & Sarah - All rights reserved</p>
+            </div>
+          </footer>
         </div>
-      </nav>
-
-      {/* Sections */}
-      <div id="hero">
-        <Hero />
       </div>
-
-      <Countdown />
-
-      <div id="couple">
-        <Couple />
-      </div>
-
-      <div id="story">
-        <Story />
-      </div>
-
-      <div id="event">
-        <EventDetails />
-      </div>
-
-      <div id="gallery">
-        <Gallery />
-      </div>
-
-      <div id="donation">
-        <Donation />
-      </div>
-
-      <div id="rsvp">
-        <RSVP />
-      </div>
-
-      <GuestBook />
-
-      {/* Footer */}
-      <footer className="bg-gray-900 text-white py-8">
-        <div className="container mx-auto px-4 text-center">
-          <Heart className="inline-block text-rose-500 mb-2" size={24} />
-          <p className="text-sm">Made with love for our special day</p>
-          <p className="text-xs text-gray-400 mt-2">© 2025 - All rights reserved</p>
-        </div>
-      </footer>
-    </div>
+    </>
   );
 }
 

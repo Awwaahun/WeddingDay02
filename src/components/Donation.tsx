@@ -9,35 +9,35 @@ export default function Donation() {
 
   const accounts = [
     {
-      id: 'bank1',
+      id: 'BCA1',
       type: 'Bank Account',
-      bank: 'Bank Central',
+      bank: 'Bank Central Asia',
       accountNumber: '1234567890',
-      accountName: 'Sarah Johnson',
+      accountName: 'Sarah Anggraini',
       icon: CreditCard,
     },
     {
-      id: 'bank2',
+      id: 'BCA2',
       type: 'Bank Account',
-      bank: 'National Bank',
+      bank: 'Bank Central Asia',
       accountNumber: '0987654321',
-      accountName: 'James Anderson',
+      accountName: 'Adam Kurniawan',
       icon: CreditCard,
     },
     {
       id: 'ewallet1',
       type: 'E-Wallet',
-      bank: 'PayNow',
-      accountNumber: '+1-555-0123',
-      accountName: 'Sarah Johnson',
+      bank: 'OVO',
+      accountNumber: '+62-555-0123',
+      accountName: 'Sarah Anggraini',
       icon: Wallet,
     },
     {
       id: 'ewallet2',
       type: 'E-Wallet',
-      bank: 'PayNow',
-      accountNumber: '+1-555-0124',
-      accountName: 'James Anderson',
+      bank: 'GoPay',
+      accountNumber: '+62-555-0124',
+      accountName: 'Adam Kurniawan',
       icon: Wallet,
     },
   ];
@@ -72,16 +72,16 @@ export default function Donation() {
               <Gift className="text-rose-600" size={48} />
             </div>
           </div>
-          <h2 className="text-4xl md:text-5xl font-serif text-gray-800 mb-4">Wedding Gift</h2>
+          <h2 className="text-4xl md:text-5xl font-serif text-gray-800 mb-4">Beri Dukungan Istimewa</h2>
           <p className="text-gray-600 max-w-2xl mx-auto">
-            Your presence at our wedding is the greatest gift of all. However, if you wish to honor us with a gift,
-            we would graciously accept a contribution towards our future together.
+            Kehadiran Anda di pernikahan kami adalah hadiah terindah. Namun, jika Anda ingin memberikan hadiah,
+kami dengan senang hati akan menerima sumbangan untuk masa depan kita bersama.
           </p>
         </div>
 
         <div
           ref={elementRef}
-          className={`max-w-4xl mx-auto grid md:grid-cols-2 gap-6 animate-on-scroll ${isVisible ? 'visible' : ''}`}
+          className={`relative z-[30] max-w-4xl mx-auto grid md:grid-cols-2 gap-6 animate-on-scroll ${isVisible ? 'visible' : ''}`}
         >
           {accounts.map((account, index) => (
             <div
@@ -138,8 +138,8 @@ export default function Donation() {
         <div className="text-center mt-12">
           <div className="inline-block bg-rose-50 rounded-lg p-6 max-w-2xl">
             <p className="text-gray-700 leading-relaxed">
-              <span className="font-semibold text-rose-600">Note:</span> Your generous gift will help us start our
-              new chapter together. Thank you for being part of our special day and for your love and support.
+              <span className="font-semibold text-rose-600">Catatan:</span> Hadiah dan dukungan Anda yang murah hati akan membantu kita memulai
+babak baru bersama. Terima kasih telah menjadi bagian dari hari istimewa kami dan atas cinta serta dukungan Anda.
             </p>
           </div>
         </div>
