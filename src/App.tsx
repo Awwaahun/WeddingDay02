@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Heart, Calendar, Users, Gift, Wallet, MessageCircle, UserCircle, Send, Film } from 'lucide-react';
 import Hero from './components/Hero';
@@ -148,6 +147,24 @@ function App() {
                 { time: 26, text: "I could walk you by, and I'll tell without a thought" },
                 { time: 32, text: "You'd be mine, would you mind if I took your hand tonight?" },
                 { time: 40, text: "Know you're all that I want this life" },
+                { time: 48, text: "I'll imagine we fell in love" },
+                { time: 51, text: "I'll nap under moonlight skies with you" },
+                { time: 54, text: "I think I'll picture us, you with the waves" },
+                { time: 58, text: "The ocean's colors on your face" },
+                { time: 62, text: "I'll leave my heart with your air" },
+                { time: 66, text: "So let me fly with you" },
+                { time: 69, text: "Will you be forever with me?" },
+                { time: 107, text: "My love will always stay by you" },
+                { time: 112, text: "I'll keep it safe, so don't you worry a thing, I'll tell you I love you more" },
+                { time: 122, text: "It's stuck with you forever, so promise you won't let it go" },
+                { time: 128, text: "I'll trust the universe will always bring me to you" },
+                { time: 137, text: "I'll imagine we fell in love" },
+                { time: 139, text: "I'll nap under moonlight skies with you" },
+                { time: 143, text: "I think I'll picture us, you with the waves" },
+                { time: 147, text: "The ocean's colors on your face" },
+                { time: 151, text: "I'll leave my heart with your air" },
+                { time: 155, text: "So let me fly with you" },
+                { time: 158, text: "Will you be forever with me?" },
               ]}
               audioSrc="https://files.catbox.moe/phz0pi.mp3"
               initialShowLyrics={false}

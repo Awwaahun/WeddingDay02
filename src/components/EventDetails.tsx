@@ -1,297 +1,377 @@
-import { Calendar, MapPin, Clock, Navigation, Phone, Mail } from 'lucide-react';
+import { Calendar, MapPin, Clock, Navigation, Phone, Mail, Car, Info } from 'lucide-react';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
 import { useState, useEffect } from 'react';
 
 export default function EventDetails() {
   const [activeEvent, setActiveEvent] = useState(0);
   const [progress, setProgress] = useState(0);
+  const [isAnimating, setIsAnimating] = useState(true);
 
   const events = [
     {
       title: 'Akad Nikah',
-      time: '20:00 PM',
+      time: '20:00',
       duration: '1 Jam',
       location: 'Rumah Mempelai Wanita',
-      address: 'Jl. Raya Temoran Omben, kab. Sampang',
+      address: 'Jl. Raya Temoran Omben, Kab. Sampang',
       description: 'Bergabunglah dengan kami saat kami mengucapkan janji pernikahan di hadapan orang-orang yang kami cintai',
       icon: Calendar,
-      phone: '+62 0875-1263-4567',
+      phone: '+62 875-1263-4567',
       email: 'ceremony@wedding.com',
-      color: 'from-rose-500 to-pink-500',
+      color: 'from-rose-500 via-pink-500 to-rose-600',
+      bgColor: 'bg-rose-50',
+      iconColor: 'text-rose-600',
+      ringColor: 'ring-rose-400',
     },
     {
       title: 'Resepsi',
-      time: '08:00 AM',
-      duration: '4 hours',
+      time: '08:00',
+      duration: '4 Jam',
       location: 'Grand Hotel Ballroom',
       address: 'Jl. Jendral Sudirman',
-      description: 'Rayakan bersama kami dengan makan malam, berdansa, dan kenangan yang tak terlupakan',
+      description: 'Rayakan bersama kami dengan makan malam, berdansa, dan kenangan yang tak terlupakan dan.menarik;sekali irhfj jjfkfkcxjdjjdjr',
       icon: Clock,
-      phone: '+62 0875-2987-6543',
+      phone: '+62 875-2987-6543',
       email: 'reception@wedding.com',
-      color: 'from-orange-500 to-amber-500',
+      color: 'from-orange-500 via-amber-500 to-orange-600',
+      bgColor: 'bg-orange-50',
+      iconColor: 'text-orange-600',
+      ringColor: 'ring-orange-400',
     },
   ];
 
   useEffect(() => {
+    if (!isAnimating) return;
+    
     const timer = setInterval(() => {
       setProgress((prev) => {
-        if (prev >= 100) return 0;
-        return prev + 1;
+        const newProgress = prev + 0.5;
+        if (newProgress >= 100) {
+          setTimeout(() => setProgress(0), 1000);
+          return 100;
+        }
+        return newProgress;
       });
-    }, 50);
+    }, 30);
 
     return () => clearInterval(timer);
-  }, []);
+  }, [isAnimating]);
+
+  useEffect(() => {
+    if (progress > 50) {
+      setActiveEvent(1);
+    } else if (progress < 50) {
+      setActiveEvent(0);
+    }
+  }, [progress]);
 
   const { elementRef, isVisible } = useScrollAnimation();
 
   return (
-    <div className="py-20 bg-gradient-to-br from-orange-50 via-rose-50 to-pink-50 overflow-hidden">
-      <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-serif text-gray-800 mb-4">Kapan & Dimana</h2>
-          <p className="text-gray-600 text-lg">Ikuti perjalanan kami melalui hari yang sempurna</p>
+    <div className="py-12 sm:py-16 lg:py-20 bg-gradient-to-br from-orange-50 via-rose-50 to-pink-50 overflow-hidden relative">
+      {/* Floating Decorations */}
+      <div className="absolute top-10 left-10 w-32 h-32 bg-rose-300 rounded-full filter blur-3xl opacity-30 animate-float"></div>
+      <div className="absolute bottom-20 right-10 w-40 h-40 bg-orange-300 rounded-full filter blur-3xl opacity-30 animate-float" style={{ animationDelay: '2s' }}></div>
+
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header */}
+        <div className="text-center mb-8 sm:mb-12 lg:mb-16">
+          <div className="inline-block mb-4">
+            <div className="bg-white rounded-full px-6 py-2 shadow-md">
+              <span className="text-rose-600 font-semibold text-sm">Informasi Acara</span>
+            </div>
+          </div>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif text-gray-800 mb-3 sm:mb-4">Kapan & Dimana</h2>
+          <p className="text-gray-600 text-sm sm:text-base lg:text-lg max-w-2xl mx-auto px-4">
+            Ikuti perjalanan kami melalui hari yang sempurna
+          </p>
         </div>
 
         <div 
           ref={elementRef}
-          className={`relative z-[30] max-w-7xl mx-auto animate-on-scroll ${isVisible ? 'visible' : ''}`}
+          className={`max-w-7xl mx-auto animate-on-scroll ${isVisible ? 'visible' : ''}`}
         >
-          {/* Timeline Track Map */}
-          <div className="relative">
-            {/* Desktop Track */}
-            <div className="hidden md:block">
-              <div className="relative h-60">
-                {/* Track Background */}
-                <div className="absolute inset-x-0 top-12 h-2 bg-gray-200 rounded-full transform -translate-y-1/2">
-                  {/* Animated Progress */}
+          {/* Interactive Timeline Map */}
+          <div className="mb-8 sm:mb-12 lg:mb-16">
+            {/* Desktop & Tablet Timeline */}
+            <div className="hidden sm:block">
+              <div className="relative px-4 sm:px-8 lg:px-12 py-8">
+                {/* Main Track */}
+                <div className="relative h-24 sm:h-32 flex items-center">
+                  {/* Background Track */}
+                  <div className="absolute inset-x-0 h-3 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 rounded-full shadow-inner"></div>
+                  
+                  {/* Animated Progress Track */}
                   <div 
-                    className="h-full bg-gradient-to-r from-rose-500 via-pink-500 to-orange-500 rounded-full transition-all duration-300"
-                    style={{ width: `${progress}%` }}
-                  />
-                </div>
-
-                {/* Event Markers */}
-                {events.map((event, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setActiveEvent(index)}
-                    className={`absolute top-1 transform -translate-y-1 transition-all duration-500 ${
-                      index === 0 ? 'left-0' : 'right-0'
-                    }`}
-                    style={{
-                      animation: activeEvent === index ? 'pulse-marker 2s infinite' : 'none'
+                    className="absolute h-3 bg-gradient-to-r from-rose-500 via-pink-400 to-orange-500 rounded-full shadow-lg transition-all duration-300 ease-out"
+                    style={{ 
+                      width: `${progress}%`,
+                      boxShadow: '0 0 20px rgba(244, 63, 94, 0.5)'
                     }}
                   >
-                    <div className={`relative ${activeEvent === index ? 'scale-125' : 'scale-100'} transition-transform duration-300`}>
-                      {/* Outer Ring */}
-                      <div className={`w-20 h-20 rounded-full bg-gradient-to-br ${event.color} p-1 shadow-lg`}>
-                        {/* Inner Circle */}
-                        <div className="w-full h-full bg-white rounded-full flex items-center justify-center">
-                          <event.icon className={`${activeEvent === index ? 'text-rose-500' : 'text-gray-600'}`} size={32} />
+                    {/* Glowing End */}
+                    <div className="absolute right-0 top-1/2 -translate-y-1/2 w-4 h-4 bg-white rounded-full animate-pulse"></div>
+                  </div>
+
+                  {/* Event Markers */}
+                  {events.map((event, index) => (
+                    <button
+                      key={index}
+                      onClick={() => {
+                        setActiveEvent(index);
+                        setIsAnimating(false);
+                        setTimeout(() => setIsAnimating(true), 3000);
+                      }}
+                      className={`absolute z-10 transition-all duration-500 transform ${
+                        index === 0 ? 'left-0' : 'right-0'
+                      } ${activeEvent === index ? 'scale-110' : 'scale-100 hover:scale-105'}`}
+                    >
+                      {/* Marker Container */}
+                      <div className="relative">
+                        {/* Pulse Ring */}
+                        {activeEvent === index && (
+                          <div className="absolute inset-0 -m-2">
+                            <div className={`w-full h-full rounded-full bg-gradient-to-r ${event.color} opacity-40 animate-ping`}></div>
+                          </div>
+                        )}
+                        
+                        {/* Main Marker */}
+                        <div className={`relative w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 rounded-full bg-gradient-to-br ${event.color} p-1 shadow-2xl`}>
+                          <div className="w-full h-full bg-white rounded-full flex items-center justify-center">
+                            <event.icon 
+                              className={`${activeEvent === index ? event.iconColor : 'text-gray-400'} transition-colors`} 
+                              size={window.innerWidth < 640 ? 20 : window.innerWidth < 1024 ? 24 : 32} 
+                            />
+                          </div>
+                        </div>
+
+                        {/* Time Badge */}
+                        <div className={`absolute -bottom-14 left-1/2 -translate-x-1/2 transition-all duration-300 ${
+                          activeEvent === index ? 'opacity-100 translate-y-0' : 'opacity-70 translate-y-1'
+                        }`}>
+                          <div className={`bg-gradient-to-r ${event.color} text-white px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-bold shadow-lg whitespace-nowrap`}>
+                            {event.time}
+                          </div>
+                        </div>
+
+                        {/* Title Label */}
+                        <div className={`absolute -top-12 left-1/2 -translate-x-1/2 text-center whitespace-nowrap transition-all duration-300 ${
+                          activeEvent === index ? 'opacity-100' : 'opacity-60'
+                        }`}>
+                          <span className="text-xs sm:text-sm font-semibold text-gray-700">{event.title}</span>
                         </div>
                       </div>
-                      
-                      {/* Time Label */}
-                      <div className={`absolute -bottom-12 left-1/2 transform -translate-x-1/2 whitespace-nowrap ${
-                        activeEvent === index ? 'opacity-100' : 'opacity-60'
-                      }`}>
-                        <div className={`bg-gradient-to-r ${event.color} text-white px-4 py-2 rounded-full text-sm font-semibold shadow-lg`}>
-                          {event.time}
-                        </div>
+                    </button>
+                  ))}
+
+                  {/* Moving Vehicle */}
+                  <div 
+                    className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 transition-all duration-300 ease-out z-20"
+                    style={{ left: `${progress}%` }}
+                  >
+                    <div className="relative">
+                      {/* Vehicle Shadow */}
+                      <div className="absolute inset-0 bg-rose-500 rounded-full filter blur-md opacity-50 animate-pulse"></div>
+                      {/* Vehicle */}
+                      <div className="relative bg-white p-2.5 sm:p-3 rounded-full shadow-2xl ring-2 ring-rose-400 animate-bounce">
+                        <Car className="text-rose-600" size={window.innerWidth < 640 ? 16 : 20} />
                       </div>
                     </div>
-                  </button>
-                ))}
+                  </div>
+                </div>
 
-                {/* Animated Car/Icon */}
-                <div 
-                  className="absolute top-12 transform -translate-y-1/2 -translate-x-1/2 transition-all duration-300"
-                  style={{ left: `${progress}%` }}
-                >
-                  <div className="bg-white p-3 rounded-full shadow-xl animate-bounce">
-                    <Navigation className="text-rose-500" size={24} />
+                {/* Progress Percentage */}
+                <div className="text-center mt-16 sm:mt-20">
+                  <div className="inline-flex items-center space-x-2 bg-white rounded-full px-4 py-2 shadow-md">
+                    <Navigation className="text-rose-600" size={16} />
+                    <span className="text-sm font-semibold text-gray-700">
+                      Perjalanan: {Math.round(progress)}%
+                    </span>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Mobile Selector */}
-            <div className="md:hidden flex space-x-4 justify-center mb-8">
+            {/* Mobile Quick Switcher */}
+            <div className="sm:hidden flex gap-3 px-4 mb-8">
               {events.map((event, index) => (
                 <button
                   key={index}
                   onClick={() => setActiveEvent(index)}
-                  className={`flex-1 py-4 rounded-xl transition-all duration-300 ${
+                  className={`flex-1 py-4 rounded-2xl transition-all duration-300 ${
                     activeEvent === index
-                      ? `bg-gradient-to-r ${event.color} text-white shadow-lg scale-105`
-                      : 'bg-white text-gray-600 shadow'
+                      ? `bg-gradient-to-br ${event.color} text-white shadow-xl scale-105 ring-4 ${event.ringColor} ring-opacity-30`
+                      : 'bg-white text-gray-600 shadow-md hover:shadow-lg'
                   }`}
                 >
                   <event.icon className="mx-auto mb-2" size={24} />
-                  <div className="text-sm font-semibold">{event.time}</div>
+                  <div className="text-xs font-bold">{event.time}</div>
+                  <div className="text-[10px] opacity-80">{event.duration}</div>
                 </button>
               ))}
             </div>
           </div>
 
-          {/* Event Cards */}
-          <div className="grid md:grid-cols-2 gap-8">
+          {/* Event Cards - Responsive Grid */}
+          <div className="grid sm:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 mb-8 sm:mb-12">
             {events.map((event, index) => (
               <div
                 key={index}
                 onClick={() => setActiveEvent(index)}
-                className={`bg-white rounded-2xl shadow-xl overflow-hidden transition-all duration-500 cursor-pointer ${
+                className={`group bg-white rounded-3xl shadow-xl overflow-hidden transition-all duration-500 cursor-pointer ${
                   activeEvent === index 
-                    ? 'scale-105 shadow-2xl ring-4 ring-rose-300' 
-                    : 'hover:scale-102 hover:shadow-2xl'
+                    ? `scale-100 sm:scale-105 shadow-2xl ring-4 ${event.ringColor}` 
+                    : 'hover:scale-102 hover:shadow-2xl opacity-90 hover:opacity-100'
                 }`}
-                style={{ 
-                  animationDelay: `${index * 0.2}s`,
-                  opacity: activeEvent === index ? 1 : 0.7
-                }}
               >
-                {/* Header with Gradient */}
-                <div className={`bg-gradient-to-r ${event.color} p-6 text-white relative overflow-hidden`}>
+                {/* Card Header */}
+                <div className={`relative bg-gradient-to-br ${event.color} p-6 sm:p-8 text-white overflow-hidden`}>
                   {/* Animated Background Pattern */}
-                  <div className="absolute inset-0 opacity-20">
-                    <div className="absolute inset-0" style={{
-                      backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)',
-                      backgroundSize: '20px 20px',
-                      animation: 'slide-bg 20s linear infinite'
-                    }} />
+                  <div className="absolute inset-0 opacity-10">
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,_white_1px,_transparent_1px)] bg-[length:20px_20px] animate-pulse"></div>
                   </div>
+
+                  {/* Decorative Circles */}
+                  <div className="absolute -top-10 -right-10 w-32 h-32 bg-white rounded-full opacity-10"></div>
+                  <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-white rounded-full opacity-10"></div>
 
                   <div className="relative z-10">
                     <div className="flex items-center justify-between mb-4">
-                      <div className="bg-white/20 backdrop-blur-sm p-3 rounded-full">
-                        <event.icon size={32} />
+                      <div className="bg-white/20 backdrop-blur-sm p-3 rounded-2xl group-hover:scale-110 transition-transform">
+                        <event.icon size={28} />
                       </div>
                       <div className="text-right">
-                        <div className="text-2xl font-bold">{event.time}</div>
-                        <div className="text-sm opacity-90">{event.duration}</div>
+                        <div className="text-3xl sm:text-4xl font-bold tracking-tight">{event.time}</div>
+                        <div className="text-sm opacity-90 mt-1">{event.duration}</div>
                       </div>
                     </div>
-                    <h3 className="text-3xl font-serif font-bold">{event.title}</h3>
+                    <h3 className="text-2xl sm:text-3xl font-serif font-bold tracking-wide">{event.title}</h3>
                   </div>
                 </div>
 
-                {/* Content */}
-                <div className="p-6 space-y-4">
+                {/* Card Content */}
+                <div className="p-5 sm:p-6 space-y-4">
                   {/* Location */}
-                  <div className="flex items-start space-x-3 group">
-                    <div className="bg-rose-100 p-2 rounded-lg group-hover:bg-rose-200 transition-colors">
-                      <MapPin className="text-rose-600" size={20} />
+                  <div className="flex items-start space-x-3 group/item">
+                    <div className={`${event.bgColor} p-2.5 rounded-xl group-hover/item:scale-110 transition-transform`}>
+                      <MapPin className={event.iconColor} size={20} />
                     </div>
-                    <div className="flex-1">
-                      <p className="font-semibold text-gray-800">{event.location}</p>
-                      <p className="text-gray-600 text-sm">{event.address}</p>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-bold text-gray-800 text-sm sm:text-base">{event.location}</p>
+                      <p className="text-gray-600 text-xs sm:text-sm mt-0.5 line-clamp-2">{event.address}</p>
                     </div>
                   </div>
 
                   {/* Description */}
-                  <p className="text-gray-600 leading-relaxed pl-11">
+                  <p className="text-gray-600 text-sm leading-relaxed pl-12">
                     {event.description}
                   </p>
 
-                  {/* Contact Info */}
-                  <div className="flex items-center space-x-4 pl-11 pt-2">
+                  {/* Contact Actions */}
+                  <div className="flex items-center gap-3 pl-12 pt-2">
                     <a 
                       href={`tel:${event.phone}`}
-                      className="flex items-center space-x-2 text-sm text-gray-500 hover:text-rose-600 transition-colors"
+                      className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-rose-600 transition-colors"
+                      onClick={(e) => e.stopPropagation()}
                     >
-                      <Phone size={16} />
-                      <span>Call</span>
+                      <Phone size={14} />
+                      <span className="hidden sm:inline">Telepon</span>
                     </a>
+                    <div className="w-px h-4 bg-gray-300"></div>
                     <a 
                       href={`mailto:${event.email}`}
-                      className="flex items-center space-x-2 text-sm text-gray-500 hover:text-rose-600 transition-colors"
+                      className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-rose-600 transition-colors"
+                      onClick={(e) => e.stopPropagation()}
                     >
-                      <Mail size={16} />
-                      <span>Email</span>
+                      <Mail size={14} />
+                      <span className="hidden sm:inline">Email</span>
                     </a>
                   </div>
 
                   {/* Action Buttons */}
-                  <div className="grid grid-cols-2 gap-3 pt-4">
-                    <button className={`bg-gradient-to-r ${event.color} text-white py-3 rounded-lg font-medium transition-all duration-300 hover:shadow-lg hover:scale-105 flex items-center justify-center space-x-2`}>
-                      <MapPin size={18} />
-                      <span>Directions</span>
+                  <div className="grid grid-cols-2 gap-2 sm:gap-3 pt-3">
+                    <button 
+                      className={`bg-gradient-to-r ${event.color} text-white py-2.5 sm:py-3 rounded-xl font-semibold text-xs sm:text-sm transition-all duration-300 hover:shadow-lg hover:scale-105 flex items-center justify-center gap-2`}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <MapPin size={16} />
+                      <span>Petunjuk</span>
                     </button>
-                    <button className="bg-gray-100 text-gray-800 py-3 rounded-lg font-medium transition-all duration-300 hover:bg-gray-200 hover:scale-105 flex items-center justify-center space-x-2">
-                      <Calendar size={18} />
-                      <span>Calendar</span>
+                    <button 
+                      className="bg-gray-100 text-gray-800 py-2.5 sm:py-3 rounded-xl font-semibold text-xs sm:text-sm transition-all duration-300 hover:bg-gray-200 hover:scale-105 flex items-center justify-center gap-2"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <Calendar size={16} />
+                      <span>Simpan</span>
                     </button>
                   </div>
                 </div>
 
-                {/* Decorative Bottom */}
-                <div className={`h-2 bg-gradient-to-r ${event.color}`} />
+                {/* Bottom Accent */}
+                <div className={`h-1.5 sm:h-2 bg-gradient-to-r ${event.color}`}></div>
               </div>
             ))}
           </div>
 
-          {/* Timeline Info */}
-          <div className="mt-12 bg-white rounded-xl shadow-lg p-6 max-w-3xl mx-auto">
-            <div className="flex items-center justify-center space-x-4 text-gray-600">
-              <Clock className="text-rose-500" size={24} />
-              <div className="text-center">
-                <p className="font-semibold text-gray-800">Jadwal Acara</p>
-                <p className="text-sm">2:00 PM - 9:00 PM</p>
-              </div>
-              <div className="h-12 w-px bg-gray-300" />
-              <div className="text-center">
-                <p className="font-semibold text-gray-800">Jarak</p>
-                <p className="text-sm">~5 KM Tempat Tujuan</p>
-              </div>
-              <div className="h-12 w-px bg-gray-300" />
-              <div className="text-center">
-                <p className="font-semibold text-gray-800">Waktu Perjalanan</p>
-                <p className="text-sm">~15 Menit</p>
+          {/* Info Cards - Responsive Stack */}
+          <div className="space-y-4 sm:space-y-6">
+            {/* Timeline Summary */}
+            <div className="bg-white rounded-2xl sm:rounded-3xl shadow-lg p-5 sm:p-6 lg:p-8">
+              <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 lg:gap-8 text-center">
+                <div className="flex items-center gap-3">
+                  <div className="bg-rose-100 p-3 rounded-xl">
+                    <Clock className="text-rose-600" size={20} />
+                  </div>
+                  <div className="text-left">
+                    <p className="font-bold text-gray-800 text-sm sm:text-base">Jadwal Acara</p>
+                    <p className="text-xs sm:text-sm text-gray-600">20:00 - 12:00</p>
+                  </div>
+                </div>
+
+                <div className="hidden sm:block w-px h-12 bg-gray-200"></div>
+
+                <div className="flex items-center gap-3">
+                  <div className="bg-orange-100 p-3 rounded-xl">
+                    <Navigation className="text-orange-600" size={20} />
+                  </div>
+                  <div className="text-left">
+                    <p className="font-bold text-gray-800 text-sm sm:text-base">Jarak</p>
+                    <p className="text-xs sm:text-sm text-gray-600">~5 KM</p>
+                  </div>
+                </div>
+
+                <div className="hidden sm:block w-px h-12 bg-gray-200"></div>
+
+                <div className="flex items-center gap-3">
+                  <div className="bg-pink-100 p-3 rounded-xl">
+                    <Car className="text-pink-600" size={20} />
+                  </div>
+                  <div className="text-left">
+                    <p className="font-bold text-gray-800 text-sm sm:text-base">Waktu Perjalanan</p>
+                    <p className="text-xs sm:text-sm text-gray-600">~15 Menit</p>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
 
-          {/* Important Note */}
-          <div className="mt-8 bg-gradient-to-r from-rose-100 to-orange-100 rounded-xl p-6 max-w-3xl mx-auto border-l-4 border-rose-500">
-            <div className="flex items-start space-x-3">
-              <div className="bg-rose-500 text-white p-2 rounded-lg">
-                <Navigation size={20} />
-              </div>
-              <div>
-                <h4 className="font-semibold text-gray-800 mb-2">Catatan Transportasi</h4>
-                <p className="text-gray-600 text-sm">
-                  Layanan antar-jemput tersedia antar lokasi tujuan. Tempat parkir tersedia di kedua lokasi.
-Kami sarankan Anda tiba 15 menit lebih awal untuk mendapatkan tempat parkir dan beristirahat.
-                </p>
+            {/* Transportation Note */}
+            <div className="bg-gradient-to-br from-rose-100 via-pink-100 to-orange-100 rounded-2xl sm:rounded-3xl p-5 sm:p-6 border-l-4 border-rose-500 shadow-md">
+              <div className="flex items-start gap-3 sm:gap-4">
+                <div className="bg-rose-500 text-white p-2.5 sm:p-3 rounded-xl shrink-0">
+                  <Info size={20} />
+                </div>
+                <div className="flex-1">
+                  <h4 className="font-bold text-gray-800 mb-2 text-sm sm:text-base">Catatan Transportasi</h4>
+                  <p className="text-gray-700 text-xs sm:text-sm leading-relaxed">
+                    Layanan antar-jemput tersedia antar lokasi. Tempat parkir gratis di kedua venue. 
+                    Kami sarankan tiba 15 menit lebih awal untuk kenyamanan Anda.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-
-      <style>{`
-        @keyframes pulse-marker {
-          0%, 100% {
-            transform: scale(1);
-            box-shadow: 0 0 0 0 rgba(244, 63, 94, 0.7);
-          }
-          50% {
-            transform: scale(1.05);
-            box-shadow: 0 0 0 10px rgba(244, 63, 94, 0);
-          }
-        }
-
-        @keyframes slide-bg {
-          0% {
-            transform: translateX(0) translateY(0);
-          }
-          100% {
-            transform: translateX(20px) translateY(20px);
-          }
-        }
-      `}</style>
     </div>
   );
 }
