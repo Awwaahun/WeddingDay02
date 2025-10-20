@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Heart, Calendar, Users, Gift, Wallet, MessageCircle, UserCircle, Send, Film } from 'lucide-react';
 import Hero from './components/Hero';
@@ -12,20 +13,17 @@ import GuestBook from './components/GuestBook';
 import LoadingScreen from './components/LoadingScreen';
 import InvitationModal from './components/InvitationModal';
 import FloralDecorations from './components/FloralDecorations';
+import LoginModal from './components/LoginModal';
+import ClientDashboard from './components/ClientDashboard';
 import { useInvitation } from './hooks/useInvitation';
+import { useWeddingConfig } from './hooks/useWeddingConfig';
 import MusicPlayer from './components/MusicPlayer';
 import PrayerDisplay from './components/PrayerDisplay';
 import PrayerLetter from './components/PrayerLetter';
 import CinematicIntro from './components/CinematicIntro';
-import { useWeddingConfig, type WeddingConfig } from './hooks/useWeddingConfig';
-import LoginModal from './components/LoginModal';
-import ClientDashboard from './components/ClientDashboard';
-
+import type { WeddingConfig } from './hooks/useWeddingConfig';
 
 function App() {
-  const initialConfig = useWeddingConfig();
-  const [weddingConfig, setWeddingConfig] = useState<WeddingConfig>(initialConfig);
-  
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('hero');
   const { isLoading, showInvitation, handleOpenInvitation } = useInvitation();
@@ -34,19 +32,70 @@ function App() {
   const [showMusicButton, setShowMusicButton] = useState(false);
   const [playMusicTrigger, setPlayMusicTrigger] = useState(false);
   const [showCinematic, setShowCinematic] = useState(false);
-  
   const [guestName, setGuestName] = useState<string | null>(null);
-  const [isLoginOpen, setIsLoginOpen] = useState(false);
-  const [isDashboardOpen, setIsDashboardOpen] = useState(false);
+  
+  // Admin/Dashboard states
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showDashboard, setShowDashboard] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  
+  // Wedding config
+  const defaultConfig = useWeddingConfig();
+  const [weddingConfig, setWeddingConfig] = useState<WeddingConfig>(defaultConfig);
 
+  // Load guest name from URL
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
-    const guest = urlParams.get('to');
-    if (guest) {
-      setGuestName(guest);
+    const name = urlParams.get('to');
+    if (name && name.trim()) {
+      setGuestName(name.trim());
     }
   }, []);
-  
+
+  // Load saved config on mount, merging with defaults for robustness
+  useEffect(() => {
+    const savedConfigRaw = localStorage.getItem('weddingConfig');
+    if (savedConfigRaw) {
+      try {
+        const savedConfig = JSON.parse(savedConfigRaw);
+
+        // Simple deep merge utility to ensure config structure is always up-to-date
+        // with the latest defaults, preventing errors from old saved versions.
+        const mergeDeep = (defaults: any, saved: any): WeddingConfig => {
+          const merged = { ...defaults };
+          for (const key in saved) {
+            if (Object.prototype.hasOwnProperty.call(saved, key)) {
+              const defaultValue = merged[key];
+              const savedValue = saved[key];
+              
+              // If both are objects (but not arrays), recurse
+              if (
+                typeof defaultValue === 'object' && defaultValue !== null && !Array.isArray(defaultValue) &&
+                typeof savedValue === 'object' && savedValue !== null && !Array.isArray(savedValue)
+              ) {
+                merged[key] = mergeDeep(defaultValue, savedValue);
+              } else if (savedValue !== undefined) {
+                // Otherwise, saved value (primitive or array) overwrites the default
+                merged[key] = savedValue;
+              }
+            }
+          }
+          return merged as WeddingConfig;
+        };
+
+        if (typeof savedConfig === 'object' && savedConfig !== null) {
+          setWeddingConfig(mergeDeep(defaultConfig, savedConfig));
+        } else {
+          console.warn('Invalid config in localStorage, using defaults.');
+        }
+
+      } catch (e) {
+        console.error('Failed to parse config from localStorage, using defaults.', e);
+        localStorage.removeItem('weddingConfig');
+      }
+    }
+  }, []); // Run only once on mount
+
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
@@ -86,45 +135,67 @@ function App() {
   };
 
   useEffect(() => {
-    if (isLoading || isModalOpen || isDashboardOpen || isLoginOpen) {
+    if (isLoading || isModalOpen || showDashboard || showCinematic) {
       document.body.style.overflow = 'hidden';
-    } else if (!showCinematic) {
+    } else {
       document.body.style.overflow = 'auto';
     }
-  }, [isLoading, isModalOpen, showCinematic, isDashboardOpen, isLoginOpen]);
+  }, [isLoading, isModalOpen, showCinematic, showDashboard]);
 
   const scrollToSection = (id: string) => {
     setActiveSection(id);
     const element = document.getElementById(id);
     element?.scrollIntoView({ behavior: 'smooth' });
   };
-  
-  const handleAdminAccess = () => setIsLoginOpen(true);
 
+  // Admin access handler
+  const handleAdminAccess = () => {
+    setShowLoginModal(true);
+  };
+
+  // Login handler
   const handleLogin = (username: string, password: string) => {
     if (username === 'admin' && password === 'wedding2025') {
-      setIsLoginOpen(false);
-      setIsDashboardOpen(true);
+      setIsAuthenticated(true);
+      setShowLoginModal(false);
+      setShowDashboard(true);
+      document.body.style.overflow = 'hidden';
     }
   };
-  
+
+  // Save config handler
   const handleSaveConfig = (newConfig: WeddingConfig) => {
     setWeddingConfig(newConfig);
-    setIsDashboardOpen(false);
+    localStorage.setItem('weddingConfig', JSON.stringify(newConfig));
+  };
+
+  // Close dashboard handler
+  const handleCloseDashboard = () => {
+    setShowDashboard(false);
+    setIsAuthenticated(false);
+    document.body.style.overflow = 'auto';
   };
 
   if (isLoading) return <LoadingScreen />;
 
   return (
     <>
-      <LoginModal isOpen={isLoginOpen} onClose={() => setIsLoginOpen(false)} onLogin={handleLogin} />
-      <ClientDashboard isOpen={isDashboardOpen} onClose={() => setIsDashboardOpen(false)} config={weddingConfig} onSave={handleSaveConfig} />
-
       <InvitationModal isOpen={isModalOpen} onOpen={onInvitationOpened} config={weddingConfig} guestName={guestName} />
       <CinematicIntro show={showCinematic} onClose={() => setShowCinematic(false)} config={weddingConfig} />
+      <LoginModal 
+        isOpen={showLoginModal} 
+        onClose={() => setShowLoginModal(false)}
+        onLogin={handleLogin}
+      />
+      <ClientDashboard
+        isOpen={showDashboard}
+        onClose={handleCloseDashboard}
+        config={weddingConfig}
+        onSave={handleSaveConfig}
+      />
 
       <div className={`transition-opacity duration-1000 ease-in ${mainVisible ? 'opacity-100' : 'opacity-0'}`}>
-        <div className="min-h-screen bg-background text-text font-sans overflow-x-hidden relative">
+        <div className="min-h-screen bg-gray-50 text-gray-800 font-sans overflow-x-hidden relative">
           
           {mainVisible && <FloralDecorations activeSection={activeSection} />}
           
@@ -149,8 +220,8 @@ function App() {
                     key={item.id}
                     onClick={() => scrollToSection(item.id)}
                     className={`flex flex-col md:flex-row items-center space-x-0 md:space-x-2 transition-colors duration-300 ${
-                      scrolled ? 'text-text/80 hover:text-primary' : 'text-white/90 hover:text-white'
-                    } ${activeSection === item.id ? (scrolled ? 'text-primary' : 'text-white font-bold') : ''}`}
+                      scrolled ? 'text-gray-700 hover:text-rose-500' : 'text-white/90 hover:text-white'
+                    } ${activeSection === item.id ? (scrolled ? 'text-rose-500 font-bold' : 'text-white font-bold') : ''}`}
                   >
                     <item.icon size={18} />
                     <span className="hidden md:inline text-sm font-medium">{item.label}</span>
@@ -186,7 +257,7 @@ function App() {
 
           <footer className="bg-gray-900 text-white py-12 relative z-10">
             <div className="container mx-auto px-4 text-center">
-              <Heart className="inline-block text-primary mb-2" size={24} />
+              <Heart className="inline-block text-rose-500 mb-2" size={24} />
               <p className="font-serif text-lg">{weddingConfig.couple.groom.name} & {weddingConfig.couple.bride.name}</p>
               <p className="text-sm">Made with love for our special day</p>
               <button

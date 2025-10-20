@@ -1,8 +1,14 @@
+
 import { useState, useEffect } from 'react';
 import { Clock } from 'lucide-react';
+import type { WeddingConfig } from '../hooks/useWeddingConfig';
 
-export default function Countdown() {
-  const weddingDate = new Date('2025-11-22T14:00:00').getTime();
+interface CountdownProps {
+  config: WeddingConfig;
+}
+
+export default function Countdown({ config }: CountdownProps) {
+  const weddingDate = new Date(`${config.wedding.date}T${config.wedding.time}`).getTime();
 
   const [timeLeft, setTimeLeft] = useState({
     Hari: 0,
@@ -12,7 +18,7 @@ export default function Countdown() {
   });
 
   useEffect(() => {
-    const timer = setInterval(() => {
+    const calculateTimeLeft = () => {
       const now = new Date().getTime();
       const distance = weddingDate - now;
 
@@ -22,7 +28,10 @@ export default function Countdown() {
         Menit: Math.max(Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)), 0),
         Detik: Math.max(Math.floor((distance % (1000 * 60)) / 1000), 0),
       });
-    }, 1000);
+    };
+    
+    calculateTimeLeft();
+    const timer = setInterval(calculateTimeLeft, 1000);
 
     return () => clearInterval(timer);
   }, [weddingDate]);

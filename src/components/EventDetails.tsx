@@ -1,44 +1,19 @@
+
 import { Calendar, MapPin, Clock, Navigation, Phone, Mail, Car, Info } from 'lucide-react';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
 import { useState, useEffect } from 'react';
+import type { WeddingConfig } from '../hooks/useWeddingConfig';
 
-export default function EventDetails() {
+interface EventDetailsProps {
+  config: WeddingConfig;
+}
+
+export default function EventDetails({ config }: EventDetailsProps) {
   const [activeEvent, setActiveEvent] = useState(0);
   const [progress, setProgress] = useState(0);
   const [isAnimating, setIsAnimating] = useState(true);
 
-  const events = [
-    {
-      title: 'Akad Nikah',
-      time: '20:00',
-      duration: '1 Jam',
-      location: 'Rumah Mempelai Wanita',
-      address: 'Jl. Raya Temoran Omben, Kab. Sampang',
-      description: 'Bergabunglah dengan kami saat kami mengucapkan janji pernikahan di hadapan orang-orang yang kami cintai',
-      icon: Calendar,
-      phone: '+62 875-1263-4567',
-      email: 'ceremony@wedding.com',
-      color: 'from-rose-500 via-pink-500 to-rose-600',
-      bgColor: 'bg-rose-50',
-      iconColor: 'text-rose-600',
-      ringColor: 'ring-rose-400',
-    },
-    {
-      title: 'Resepsi',
-      time: '08:00',
-      duration: '4 Jam',
-      location: 'Grand Hotel Ballroom',
-      address: 'Jl. Jendral Sudirman',
-      description: 'Rayakan bersama kami dengan makan malam, berdansa, dan kenangan yang tak terlupakan dan.menarik;sekali irhfj jjfkfkcxjdjjdjr',
-      icon: Clock,
-      phone: '+62 875-2987-6543',
-      email: 'reception@wedding.com',
-      color: 'from-orange-500 via-amber-500 to-orange-600',
-      bgColor: 'bg-orange-50',
-      iconColor: 'text-orange-600',
-      ringColor: 'ring-orange-400',
-    },
-  ];
+  const events = config.events;
 
   useEffect(() => {
     if (!isAnimating) return;
@@ -66,6 +41,12 @@ export default function EventDetails() {
   }, [progress]);
 
   const { elementRef, isVisible } = useScrollAnimation();
+  
+  const getIconForEvent = (title: string) => {
+    if (title.toLowerCase().includes('akad')) return Calendar;
+    if (title.toLowerCase().includes('resepsi')) return Clock;
+    return Info;
+  };
 
   return (
     <div className="py-12 sm:py-16 lg:py-20 bg-gradient-to-br from-orange-50 via-rose-50 to-pink-50 overflow-hidden relative">
@@ -114,7 +95,9 @@ export default function EventDetails() {
                   </div>
 
                   {/* Event Markers */}
-                  {events.map((event, index) => (
+                  {events.map((event, index) => {
+                    const Icon = getIconForEvent(event.title);
+                    return (
                     <button
                       key={index}
                       onClick={() => {
@@ -138,7 +121,7 @@ export default function EventDetails() {
                         {/* Main Marker */}
                         <div className={`relative w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 rounded-full bg-gradient-to-br ${event.color} p-1 shadow-2xl`}>
                           <div className="w-full h-full bg-white rounded-full flex items-center justify-center">
-                            <event.icon 
+                            <Icon 
                               className={`${activeEvent === index ? event.iconColor : 'text-gray-400'} transition-colors`} 
                               size={window.innerWidth < 640 ? 20 : window.innerWidth < 1024 ? 24 : 32} 
                             />
@@ -162,7 +145,7 @@ export default function EventDetails() {
                         </div>
                       </div>
                     </button>
-                  ))}
+                  )})}
 
                   {/* Moving Vehicle */}
                   <div 
@@ -194,7 +177,9 @@ export default function EventDetails() {
 
             {/* Mobile Quick Switcher */}
             <div className="sm:hidden flex gap-3 px-4 mb-8">
-              {events.map((event, index) => (
+              {events.map((event, index) => {
+                 const Icon = getIconForEvent(event.title);
+                 return (
                 <button
                   key={index}
                   onClick={() => setActiveEvent(index)}
@@ -204,17 +189,19 @@ export default function EventDetails() {
                       : 'bg-white text-gray-600 shadow-md hover:shadow-lg'
                   }`}
                 >
-                  <event.icon className="mx-auto mb-2" size={24} />
+                  <Icon className="mx-auto mb-2" size={24} />
                   <div className="text-xs font-bold">{event.time}</div>
                   <div className="text-[10px] opacity-80">{event.duration}</div>
                 </button>
-              ))}
+              )})}
             </div>
           </div>
 
           {/* Event Cards - Responsive Grid */}
           <div className="grid sm:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 mb-8 sm:mb-12">
-            {events.map((event, index) => (
+            {events.map((event, index) => {
+              const Icon = getIconForEvent(event.title);
+              return (
               <div
                 key={index}
                 onClick={() => setActiveEvent(index)}
@@ -238,7 +225,7 @@ export default function EventDetails() {
                   <div className="relative z-10">
                     <div className="flex items-center justify-between mb-4">
                       <div className="bg-white/20 backdrop-blur-sm p-3 rounded-2xl group-hover:scale-110 transition-transform">
-                        <event.icon size={28} />
+                        <Icon size={28} />
                       </div>
                       <div className="text-right">
                         <div className="text-3xl sm:text-4xl font-bold tracking-tight">{event.time}</div>
@@ -310,7 +297,7 @@ export default function EventDetails() {
                 {/* Bottom Accent */}
                 <div className={`h-1.5 sm:h-2 bg-gradient-to-r ${event.color}`}></div>
               </div>
-            ))}
+            )})}
           </div>
 
           {/* Info Cards - Responsive Stack */}

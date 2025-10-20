@@ -1,12 +1,15 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { X } from 'lucide-react';
+import type { WeddingConfig } from '../hooks/useWeddingConfig';
 
 interface CinematicIntroProps {
   show: boolean;
   onClose: () => void;
+  config: WeddingConfig;
 }
 
-const CinematicIntro: React.FC<CinematicIntroProps> = ({ show, onClose }) => {
+const CinematicIntro: React.FC<CinematicIntroProps> = ({ show, onClose, config }) => {
   const [doorsOpen, setDoorsOpen] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -48,7 +51,7 @@ const CinematicIntro: React.FC<CinematicIntroProps> = ({ show, onClose }) => {
   const innerDoorPanelStyle: React.CSSProperties = {
     width: '100vw',
     height: '100vh',
-    backgroundImage: "url('https://files.catbox.moe/iix5a0.svg')",
+    backgroundImage: `url('${config.cinematic.doorImage}')`,
     backgroundSize: 'cover',
     backgroundPosition: 'center center',
   };
@@ -59,7 +62,7 @@ const CinematicIntro: React.FC<CinematicIntroProps> = ({ show, onClose }) => {
       <div className="absolute inset-0 w-full h-full">
         <video
           ref={videoRef}
-          src="https://files.catbox.moe/btzeyc.mp4"
+          src={config.cinematic.videoSrc}
           className={`w-full h-full object-cover transition-opacity duration-1000 ${doorsOpen ? 'opacity-100' : 'opacity-0'}`}
           loop
           muted

@@ -1,8 +1,14 @@
+
 import { Heart, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
+import type { WeddingConfig } from '../hooks/useWeddingConfig';
 
-export default function Story() {
+interface StoryProps {
+  config: WeddingConfig;
+}
+
+export default function Story({ config }: StoryProps) {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [touchStart, setTouchStart] = useState(0);
   const [touchEnd, setTouchEnd] = useState(0);
@@ -10,26 +16,7 @@ export default function Story() {
   const [offset, setOffset] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const stories = [
-    {
-      title: 'Pertemuan Pertama',
-      date: 'Musim Semi 2019',
-      description: 'Kisah kami bermula di sebuah kedai kopi yang nyaman di suatu sore yang hujan. Obrolan sederhana tentang buku berubah menjadi berjam-jam tawa dan keakraban.',
-      image: 'https://files.catbox.moe/t9q13j.jpg?auto=compress&cs=tinysrgb&w=800',
-    },
-    {
-      title: 'Kencan Pertama',
-      date: 'Musim Panas 2019',
-      description: 'Kencan resmi pertama kami adalah jalan-jalan di kebun raya. Kami mengobrol sampai matahari terbenam, dan aku tahu aku telah menemukan seseorang yang istimewa.',
-      image: 'https://files.catbox.moe/45zymg.jpg?auto=compress&cs=tinysrgb&w=800',
-    },
-    {
-      title: 'Lamaran',
-      date: 'Musim Dingin 2023',
-      description: 'Di bawah langit berbintang di atas gedung rooftop yang indah, Adam berlutut. Di tengah air mata bahagia, aku berkata YA untuk selamanya bersama sahabatku.',
-      image: 'https://files.catbox.moe/ck81ky.jpg?auto=compress&cs=tinysrgb&w=800',
-    },
-  ];
+  const stories = config.story;
 
   const minSwipeDistance = 50;
 

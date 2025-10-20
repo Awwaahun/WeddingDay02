@@ -59,20 +59,20 @@ const PrayerLetter: React.FC<PrayerLetterProps> = ({ config }) => {
         >
           <div className="text-left">
             <p className="text-lg text-gray-800 leading-relaxed mb-6 font-serif italic">
-              {config.prayerLetter.greeting}
+              Dearest Family and Friends,
             </p>
             <p className="text-gray-700 leading-relaxed mb-4">
-              {config.prayerLetter.body1}
+              As we stand on the threshold of our new life together, our hearts are overflowing with joy and gratitude. We are so blessed to be surrounded by your love and support, which has shaped us into the people we are today.
             </p>
             <p className="text-gray-700 leading-relaxed mb-4">
-              {config.prayerLetter.body2}
+              We kindly ask for your prayers as we begin our marriage. Pray that our love for each other will deepen with each passing day, rooted in patience, kindness, and understanding. Pray for wisdom to navigate the challenges that may come our way, and for a bond that is resilient and unbreakable.
             </p>
             <p className="text-gray-700 leading-relaxed mb-6">
-              {config.prayerLetter.body3}
+              May our home be a sanctuary of peace, laughter, and love, reflecting the grace we have so freely received. Your spiritual support is a cornerstone upon which we hope to build our future, and we are eternally grateful for it.
             </p>
             <div className="border-t border-rose-200 pt-6 mt-8 text-right">
               <p className="text-lg text-gray-800 leading-relaxed">
-                {config.prayerLetter.closing}
+                With love and gratitude,
               </p>
               <p className="font-serif text-3xl text-rose-600 mt-2">
                 {config.couple.groom.name} & {config.couple.bride.name}

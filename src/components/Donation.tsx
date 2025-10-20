@@ -1,59 +1,40 @@
 import { useState, useEffect } from 'react';
 import { Gift, Copy, Check, CreditCard, Wallet, QrCode } from 'lucide-react';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
+import type { WeddingConfig } from '../hooks/useWeddingConfig';
 
-export default function Donation() {
+interface DonationProps {
+  config: WeddingConfig;
+}
+
+export default function Donation({ config }: DonationProps) {
   const [copiedAccount, setCopiedAccount] = useState<string | null>(null);
   const [selectedQR, setSelectedQR] = useState<string | null>(null);
   const [qrCodes, setQrCodes] = useState<Record<string, string>>({});
-
-  const accounts = [
-    {
-      id: 'BCA1',
-      type: 'Bank Account',
-      bank: 'Bank Central Asia',
-      accountNumber: '1234567890',
-      accountName: 'Sarah Anggraini',
-      icon: CreditCard,
-    },
-    {
-      id: 'BCA2',
-      type: 'Bank Account',
-      bank: 'Bank Central Asia',
-      accountNumber: '0987654321',
-      accountName: 'Adam Kurniawan',
-      icon: CreditCard,
-    },
-    {
-      id: 'ewallet1',
-      type: 'E-Wallet',
-      bank: 'OVO',
-      accountNumber: '+62-555-0123',
-      accountName: 'Sarah Anggraini',
-      icon: Wallet,
-    },
-    {
-      id: 'ewallet2',
-      type: 'E-Wallet',
-      bank: 'GoPay',
-      accountNumber: '+62-555-0124',
-      accountName: 'Adam Kurniawan',
-      icon: Wallet,
-    },
-  ];
+  
+  const accounts = config.donations.map(account => ({
+    ...account,
+    icon: account.type === 'Bank Account' ? CreditCard : Wallet,
+  }));
 
   useEffect(() => {
     const generateQRCodes = async () => {
       const codes: Record<string, string> = {};
       for (const account of accounts) {
-        const qrData = `${account.bank}|${account.accountName}|${account.accountNumber}`;
-        const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(qrData)}`;
-        codes[account.id] = qrUrl;
+        if (account.qrUrl) {
+          codes[account.id] = account.qrUrl;
+        } else {
+          const qrData = `${account.bank}|${account.accountName}|${account.accountNumber}`;
+          const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(qrData)}`;
+          codes[account.id] = qrUrl;
+        }
       }
       setQrCodes(codes);
     };
-    generateQRCodes();
-  }, []);
+    if (accounts.length > 0) {
+      generateQRCodes();
+    }
+  }, [accounts]);
 
   const copyToClipboard = (text: string, accountId: string) => {
     navigator.clipboard.writeText(text);

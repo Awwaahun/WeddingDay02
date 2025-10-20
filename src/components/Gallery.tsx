@@ -1,22 +1,11 @@
+
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { X, ChevronLeft, ChevronRight, ZoomIn, ZoomOut, Maximize2, Download } from 'lucide-react';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
-import type { Image, FilterType } from '../types';
+import type { WeddingConfig } from '../hooks/useWeddingConfig';
 
-const images: Image[] = [
-  { url: 'https://images.pexels.com/photos/1024993/pexels-photo-1024993.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2', type: 'portrait', title: 'Couple by the Sea' },
-  { url: 'https://images.pexels.com/photos/1024960/pexels-photo-1024960.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2', type: 'landscape', title: 'Lakeside Vows' },
-  { url: 'https://images.pexels.com/photos/1065084/pexels-photo-1065084.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2', type: 'portrait', title: 'First Dance' },
-  { url: 'https://images.pexels.com/photos/1024966/pexels-photo-1024966.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2', type: 'landscape', title: 'Sunset Kiss' },
-  { url: 'https://images.pexels.com/photos/1439261/pexels-photo-1439261.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2', type: 'portrait', title: 'Bridal Portrait' },
-  { url: 'https://images.pexels.com/photos/2174656/pexels-photo-2174656.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2', type: 'landscape', title: 'Walk to Remember' },
-  { url: 'https://images.pexels.com/photos/3014856/pexels-photo-3014856.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2', type: 'portrait', title: 'Joyful Embrace' },
-  { url: 'https://images.pexels.com/photos/1616113/pexels-photo-1616113.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2', type: 'landscape', title: 'Autumn Love' },
-  { url: 'https://images.pexels.com/photos/935979/pexels-photo-935979.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2', type: 'portrait', title: 'Candid Laughter'},
-  { url: 'https://images.pexels.com/photos/2253870/pexels-photo-2253870.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2', type: 'landscape', title: 'Beach Romance'},
-  { url: 'https://images.pexels.com/photos/1779393/pexels-photo-1779393.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2', type: 'portrait', title: 'Shared Secrets'},
-  { url: 'https://images.pexels.com/photos/1308890/pexels-photo-1308890.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2', type: 'landscape', title: 'Holding Hands'},
-];
+type Image = WeddingConfig['gallery'][number];
+type FilterType = 'all' | 'portrait' | 'landscape';
 
 interface GalleryItemProps {
   image: Image;
@@ -55,13 +44,19 @@ const GalleryItem: React.FC<GalleryItemProps> = ({ image, index, onClick }) => {
   );
 };
 
-export default function Gallery() {
+interface GalleryProps {
+  config: WeddingConfig;
+}
+
+export default function Gallery({ config }: GalleryProps) {
   const [selectedImage, setSelectedImage] = useState<number | null>(null);
   const [scale, setScale] = useState(1);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const [filter, setFilter] = useState<FilterType>('all');
+  
+  const images = config.gallery;
 
   const filteredImages = filter === 'all' ? images : images.filter(img => img.type === filter);
 

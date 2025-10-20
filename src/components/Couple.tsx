@@ -1,28 +1,14 @@
+
 import { Heart, Instagram, Mail } from 'lucide-react';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
+import type { WeddingConfig } from '../hooks/useWeddingConfig';
 
-export default function Couple() {
-  const bride = {
-    name: 'Sarah',
-    fullName: 'Sarah Anggraini',
-    role: 'Mempelai Wanita',
-    image: 'https://files.catbox.moe/ye1ccs.png?auto=compress&cs=tinysrgb&w=800',
-    bio: 'Seorang arsitek penuh semangat yang mencintai seni, kopi, dan menjelajahi tempat-tempat tersembunyi di seluruh dunia. Sarah percaya pada penciptaan ruang yang indah dan kenangan yang bermakna.',
-    parents: 'Putri dari Bapak Dedy & Ibu Martina',
-    instagram: '@sarahanggraini',
-    email: 'sarah@example.com',
-  };
+interface CoupleProps {
+  config: WeddingConfig;
+}
 
-  const groom = {
-    name: 'Adam',
-    fullName: 'Adam Kurniawan',
-    role: 'Mempelai Pria',
-    image: 'https://files.catbox.moe/7c4cqd.png?auto=compress&cs=tinysrgb&w=800',
-    bio: 'Seorang Software Engineer yang gemar mendaki, fotografi, dan memasak resep-resep baru. Adam menemukan kegembiraan dalam memecahkan masalah dan menjelajahi alam.',
-    parents: 'Putra dari Bapak Martono & Ibu Widya',
-    instagram: '@adamkurniawan',
-    email: 'adam@example.com',
-  };
+export default function Couple({ config }: CoupleProps) {
+  const { bride, groom } = config.couple;
 
   const CoupleCard = ({ person, reverse }: { person: typeof bride; reverse?: boolean }) => {
     const { elementRef, isVisible } = useScrollAnimation();
