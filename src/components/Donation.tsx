@@ -56,7 +56,7 @@ export default function Donation({ config }: DonationProps) {
           <h2 className="text-4xl md:text-5xl font-serif text-gray-800 mb-4">Beri Dukungan Istimewa</h2>
           <p className="text-gray-600 max-w-2xl mx-auto">
             Kehadiran Anda di pernikahan kami adalah hadiah terindah. Namun, jika Anda ingin memberikan hadiah,
-kami dengan senang hati akan menerima sumbangan untuk masa depan kita bersama.
+kami dengan senang hati akan menerima untuk masa depan kita bersama.
           </p>
         </div>
 
@@ -119,7 +119,7 @@ kami dengan senang hati akan menerima sumbangan untuk masa depan kita bersama.
         <div className="text-center mt-12">
           <div className="inline-block bg-rose-50 rounded-lg p-6 max-w-2xl">
             <p className="text-gray-700 leading-relaxed">
-              <span className="font-semibold text-rose-600">Catatan:</span> Hadiah dan dukungan Anda yang murah hati akan membantu kita memulai
+              <span className="font-semibold text-rose-600">Catatan:</span> Hadiah dan dukungan Anda akan membantu kita memulai
 babak baru bersama. Terima kasih telah menjadi bagian dari hari istimewa kami dan atas cinta serta dukungan Anda.
             </p>
           </div>

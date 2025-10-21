@@ -295,18 +295,18 @@ export const useWeddingConfig = (): WeddingConfig => {
     },
     
     invitation: {
-      title: "You're Invited To The Wedding Of",
+      title: "Kamu Telah Diundang Ke Pernikahan",
       subtitle: 'Kepada Teman dan Keluarga besar, Kami Mengundang',
       buttonText: 'Buka Undangan',
       backgroundVideo: 'https://files.catbox.moe/btzeyc.mp4',
     },
     
       prayerLetter: {
-      greeting: 'Dearest Family and Friends,',
-      body1: 'As we stand on the threshold of our new life together, our hearts are overflowing with joy and gratitude. We are so blessed to be surrounded by your love and support, which has shaped us into the people we are today.',
-      body2: 'We kindly ask for your prayers as we begin our marriage. Pray that our love for each other will deepen with each passing day, rooted in patience, kindness, and understanding. Pray for wisdom to navigate the challenges that may come our way, and for a bond that is resilient and unbreakable.',
-      body3: 'May our home be a sanctuary of peace, laughter, and love, reflecting the grace we have so freely received. Your spiritual support is a cornerstone upon which we hope to build our future, and we are eternally grateful for it.',
-      closing: 'With love and gratitude,',
+      greeting: 'Keluarga dan Sahabat Tersayang,',
+      body1: 'Memulai hidup baru bersama ini rasanya luar biasa. Hati kami penuh kebahagiaan dan rasa syukur. Kami sangat berterima kasih atas semua cinta dan dukungan kalian; tanpa kalian, kami tidak akan menjadi seperti sekarang ini',
+      body2: 'Kami memohon doa kalian di awal perjalanan pernikahan ini. Doakanlah agar cinta kami tidak hanya tumbuh, tetapi benar-benar menjadi landasan yang kokoh. Doakan agar kasih kami diwujudkan dalam tindakan nyata: kesabaran yang tak terputus, kebaikan hati yang melayani, dan pengertian yang mendalam, bahkan saat kami diuji. Berdoalah agar kami mampu melewati semua',
+      body3: 'Semoga rumah kita benar-benar menjadi tempat di mana setiap hari kita bisa menemukan ketenangan setelah lelah beraktivitas, di mana canda tawa kita terdengar nyaring, dan di mana cinta kita terlihat dari tindakan saling menghargai. Kita akan berupaya untuk menjalani ini sebagai cerminan rasa syukur atas segala kebaikan yang kita terima. Komitmen dan upaya kita, yang didasari oleh iman, adalah pondasi nyata untuk membangun masa depan bersama.',
+      closing: 'Dengan cinta dan rasa syukur,',
     },
     
     theme: {

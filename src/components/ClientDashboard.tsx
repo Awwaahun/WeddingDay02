@@ -58,20 +58,20 @@ ${config.couple.groom.name} & ${config.couple.bride.name}`
   }, [config]);
 
   const tabs = [
-    { id: 'couple', label: 'Couple Info', icon: Heart },
-    { id: 'hero', label: 'Hero Section', icon: Sparkles },
-    { id: 'cinematic', label: 'Cinematic', icon: Film },
-    { id: 'invitation', label: 'Invitation', icon: Mail },
-    { id: 'wedding', label: 'Wedding Date', icon: Calendar },
-    { id: 'events', label: 'Events', icon: MapPin },
-    { id: 'story', label: 'Story', icon: Users },
-    { id: 'prayerLetter', label: 'Prayer Letter', icon: BookOpen },
-    { id: 'music', label: 'Music', icon: Music },
-    { id: 'gallery', label: 'Gallery', icon: Image },
-    { id: 'donations', label: 'Donations', icon: Gift },
-    { id: 'theme', label: 'Theme', icon: Palette },
-    { id: 'whatsapp', label: 'Bulk WhatsApp', icon: Send },
-    { id: 'json', label: 'Settings & Data', icon: FileJson },
+    { id: 'couple', label: 'Informasi', icon: Heart },
+    { id: 'hero', label: 'Bagian Utama', icon: Sparkles },
+    { id: 'cinematic', label: 'Sinematik', icon: Film },
+    { id: 'invitation', label: 'Undangan', icon: Mail },
+    { id: 'wedding', label: 'Tanggal', icon: Calendar },
+    { id: 'events', label: 'Acara', icon: MapPin },
+    { id: 'story', label: 'Kisah', icon: Users },
+    { id: 'prayerLetter', label: 'Pesan Doa', icon: BookOpen },
+    { id: 'music', label: 'Musik', icon: Music },
+    { id: 'gallery', label: 'Galeri', icon: Image },
+    { id: 'donations', label: 'Donasi', icon: Gift },
+    { id: 'theme', label: 'Tema', icon: Palette },
+    { id: 'whatsapp', label: 'Kirim Whatsapp', icon: Send },
+    { id: 'json', label: 'Pengaturan & Data', icon: FileJson },
   ] as const;
   
   const [activeTab, setActiveTab] = useState<typeof tabs[number]['id']>('couple');
@@ -161,13 +161,13 @@ ${config.couple.groom.name} & ${config.couple.bride.name}`
     reader.onload = (e) => {
       try {
         const text = e.target?.result;
-        if (typeof text !== 'string') throw new Error("File is not readable");
+        if (typeof text !== 'string') throw new Error("File tidak terbaca");
         const importedConfig = JSON.parse(text);
         setEditedConfig(importedConfig);
         setHasChanges(true);
-        alert("Configuration imported successfully! Remember to save your changes.");
+        alert("Konfigurasi berhasil diimpor! Jangan lupa simpan perubahan Anda..");
       } catch (error) {
-        alert("Failed to import configuration. Please check if the file is a valid JSON config.");
+        alert("Gagal mengimpor konfigurasi. Harap periksa apakah berkas tersebut merupakan konfigurasi JSON yang valid.");
         console.error(error);
       }
     };
@@ -180,12 +180,12 @@ ${config.couple.groom.name} & ${config.couple.bride.name}`
   const handleSave = () => {
     onSave(editedConfig);
     setHasChanges(false);
-    alert('Configuration saved successfully!');
+    alert('Konfigurasi berhasil disimpan!');
   };
 
   const handleLogout = () => {
     if (hasChanges) {
-      if (window.confirm('You have unsaved changes. Are you sure you want to logout?')) {
+      if (window.confirm('Anda memiliki perubahan yang belum disimpan. Apakah Anda yakin ingin keluar?')) {
         onClose();
       }
     } else {
@@ -195,7 +195,7 @@ ${config.couple.groom.name} & ${config.couple.bride.name}`
   
   const handleSendWhatsapp = (guest: Guest) => {
     if (!guest.phone) {
-        alert(`Phone number is missing for ${guest.name}.`);
+        alert(`Nomor telepon tidak ada untuk ${guest.name}.`);
         return;
     }
 
@@ -216,7 +216,7 @@ ${config.couple.groom.name} & ${config.couple.bride.name}`
   const handleAddGuest = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newName.trim()) {
-        alert('Guest name is required.');
+        alert('Nama tamu wajib diisi.');
         return;
     }
     setIsAdding(true);
@@ -233,15 +233,15 @@ ${config.couple.groom.name} & ${config.couple.bride.name}`
             setNewPhone('');
         }
     } catch (error) {
-        console.error('Error adding guest:', error);
-        alert('Failed to add guest.');
+        console.error('Terjadi kesalahan saat menambahkan tamu:', error);
+        alert('Gagal menambahkan tamu.');
     } finally {
         setIsAdding(false);
     }
   };
 
   const handleDeleteGuest = async (guest: Guest) => {
-    if (window.confirm(`Are you sure you want to delete ${guest.name}?`)) {
+    if (window.confirm(`Apakah Anda yakin ingin menghapus? ${guest.name}?`)) {
         setDeletingId(guest.id);
         try {
             const { error } = await supabase
@@ -252,8 +252,8 @@ ${config.couple.groom.name} & ${config.couple.bride.name}`
             if (error) throw error;
             setGuests(prev => prev.filter(g => g.id !== guest.id));
         } catch (error) {
-            console.error('Error deleting guest:', error);
-            alert('Failed to delete guest.');
+            console.error('Terjadi kesalahan saat menghapus tamu:', error);
+            alert('Gagal menghapus tamu.');
         } finally {
             setDeletingId(null);
         }
@@ -280,7 +280,7 @@ ${config.couple.groom.name} & ${config.couple.bride.name}`
             }).filter(g => g.name);
 
             if (newGuests.length === 0) {
-                alert('No valid guests found in the file.');
+                alert('Tidak ada tamu yang valid ditemukan dalam berkas.');
                 setIsImporting(false);
                 return;
             }
@@ -296,11 +296,11 @@ ${config.couple.groom.name} & ${config.couple.bride.name}`
             if (fetchError) throw fetchError;
             if (data) setGuests(data);
 
-            alert(`${newGuests.length} guests imported successfully!`);
+            alert(`${newGuests.length} tamu berhasil diimpor!`);
 
         } catch (error) {
-            console.error('Error importing CSV:', error);
-            alert('Failed to import CSV. Please check the file format (Name,Phone) and console for errors.');
+            console.error('Kesalahan saat mengimpor CSV:', error);
+            alert('Gagal mengimpor CSV. Silakan periksa format file (Nama, Telepon) dan konsol untuk menemukan kesalahan.');
         } finally {
             setIsImporting(false);
             if (importFileRef.current) {
@@ -322,18 +322,18 @@ ${config.couple.groom.name} & ${config.couple.bride.name}`
               <div className="flex items-center space-x-3">
                 <div className="bg-white/20 backdrop-blur-sm p-3 rounded-full"><Settings size={24} /></div>
                 <div>
-                  <h1 className="text-2xl font-serif font-bold">Wedding Configuration Dashboard</h1>
-                  <p className="text-sm text-white/80">Customize your wedding website</p>
+                  <h1 className="text-2xl font-serif font-bold">Dashboard Konfigurasi Pernikahan</h1>
+                  <p className="text-sm text-white/80">Sesuaikan situs web pernikahan Anda</p>
                 </div>
               </div>
               <div className="flex items-center space-x-2">
                 {hasChanges && (
                   <button onClick={handleSave} className="flex items-center space-x-2 bg-white text-rose-600 px-4 py-2 rounded-lg hover:bg-rose-50 transition-colors">
-                    <Save size={18} /> <span className="hidden md:inline">Save Changes</span>
+                    <Save size={18} /> <span className="hidden md:inline">Simpan Perubahan</span>
                   </button>
                 )}
                 <button onClick={handleLogout} className="flex items-center space-x-2 bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg transition-colors">
-                  <LogOut size={18} /> <span className="hidden md:inline">Logout</span>
+                  <LogOut size={18} /> <span className="hidden md:inline">Keluar</span>
                 </button>
               </div>
             </div>
@@ -354,27 +354,27 @@ ${config.couple.groom.name} & ${config.couple.bride.name}`
             <div className="flex-1 p-6 md:p-8 overflow-y-auto max-h-[calc(100vh-200px)]">
               {activeTab === 'couple' && (
                 <div className="space-y-6">
-                  <h2 className="text-2xl font-serif font-bold text-gray-800 mb-6">Couple Information</h2>
+                  <h2 className="text-2xl font-serif font-bold text-gray-800 mb-6">Informasi Pasangan</h2>
                   <div className="bg-rose-50 rounded-xl p-6">
-                    <h3 className="text-xl font-semibold text-rose-600 mb-4">Bride Details</h3>
+                    <h3 className="text-xl font-semibold text-rose-600 mb-4">Detail Pengantin Wanita</h3>
                     <div className="grid md:grid-cols-2 gap-4">
-                      <InputField label="Name" value={editedConfig.couple.bride.name} onChange={e => handleNestedInputChange('couple', 'bride', 'name', e.target.value)} />
-                      <InputField label="Full Name" value={editedConfig.couple.bride.fullName} onChange={e => handleNestedInputChange('couple', 'bride', 'fullName', e.target.value)} />
+                      <InputField label="Nama" value={editedConfig.couple.bride.name} onChange={e => handleNestedInputChange('couple', 'bride', 'name', e.target.value)} />
+                      <InputField label="Nama Lengkap" value={editedConfig.couple.bride.fullName} onChange={e => handleNestedInputChange('couple', 'bride', 'fullName', e.target.value)} />
                       <InputField label="Instagram" value={editedConfig.couple.bride.instagram} onChange={e => handleNestedInputChange('couple', 'bride', 'instagram', e.target.value)} />
                       <InputField label="Email" type="email" value={editedConfig.couple.bride.email} onChange={e => handleNestedInputChange('couple', 'bride', 'email', e.target.value)} />
-                      <div className="md:col-span-2"><InputField label="Parents" value={editedConfig.couple.bride.parents} onChange={e => handleNestedInputChange('couple', 'bride', 'parents', e.target.value)} /></div>
+                      <div className="md:col-span-2"><InputField label="Keluarga" value={editedConfig.couple.bride.parents} onChange={e => handleNestedInputChange('couple', 'bride', 'parents', e.target.value)} /></div>
                       <div className="md:col-span-2"><TextareaField label="Bio" value={editedConfig.couple.bride.bio} onChange={e => handleNestedInputChange('couple', 'bride', 'bio', e.target.value)} /></div>
                       <div className="md:col-span-2"><InputField label="Image URL" type="url" value={editedConfig.couple.bride.image} onChange={e => handleNestedInputChange('couple', 'bride', 'image', e.target.value)} /></div>
                     </div>
                   </div>
                   <div className="bg-blue-50 rounded-xl p-6">
-                    <h3 className="text-xl font-semibold text-blue-600 mb-4">Groom Details</h3>
+                    <h3 className="text-xl font-semibold text-blue-600 mb-4">Detail Pengantin Pria</h3>
                     <div className="grid md:grid-cols-2 gap-4">
-                        <InputField label="Name" value={editedConfig.couple.groom.name} onChange={e => handleNestedInputChange('couple', 'groom', 'name', e.target.value)} focusColor="focus:ring-blue-500" />
-                        <InputField label="Full Name" value={editedConfig.couple.groom.fullName} onChange={e => handleNestedInputChange('couple', 'groom', 'fullName', e.target.value)} focusColor="focus:ring-blue-500"/>
+                        <InputField label="Nama" value={editedConfig.couple.groom.name} onChange={e => handleNestedInputChange('couple', 'groom', 'name', e.target.value)} focusColor="focus:ring-blue-500" />
+                        <InputField label="Nama Lengkap" value={editedConfig.couple.groom.fullName} onChange={e => handleNestedInputChange('couple', 'groom', 'fullName', e.target.value)} focusColor="focus:ring-blue-500"/>
                         <InputField label="Instagram" value={editedConfig.couple.groom.instagram} onChange={e => handleNestedInputChange('couple', 'groom', 'instagram', e.target.value)} focusColor="focus:ring-blue-500"/>
                         <InputField label="Email" type="email" value={editedConfig.couple.groom.email} onChange={e => handleNestedInputChange('couple', 'groom', 'email', e.target.value)} focusColor="focus:ring-blue-500"/>
-                        <div className="md:col-span-2"><InputField label="Parents" value={editedConfig.couple.groom.parents} onChange={e => handleNestedInputChange('couple', 'groom', 'parents', e.target.value)} focusColor="focus:ring-blue-500"/></div>
+                        <div className="md:col-span-2"><InputField label="Keluarga" value={editedConfig.couple.groom.parents} onChange={e => handleNestedInputChange('couple', 'groom', 'parents', e.target.value)} focusColor="focus:ring-blue-500"/></div>
                         <div className="md:col-span-2"><TextareaField label="Bio" value={editedConfig.couple.groom.bio} onChange={e => handleNestedInputChange('couple', 'groom', 'bio', e.target.value)} focusColor="focus:ring-blue-500"/></div>
                         <div className="md:col-span-2"><InputField label="Image URL" type="url" value={editedConfig.couple.groom.image} onChange={e => handleNestedInputChange('couple', 'groom', 'image', e.target.value)} focusColor="focus:ring-blue-500"/></div>
                     </div>
@@ -384,7 +384,7 @@ ${config.couple.groom.name} & ${config.couple.bride.name}`
 
               {activeTab === 'hero' && (
                 <div className="space-y-6">
-                  <h2 className="text-2xl font-serif font-bold text-gray-800 mb-6">Hero Section</h2>
+                  <h2 className="text-2xl font-serif font-bold text-gray-800 mb-6">Bagian Utama</h2>
                   <div className="bg-gradient-to-br from-rose-50 to-orange-50 rounded-xl p-6">
                     <div className="space-y-4">
                       <InputField label="Background Image URL" type="url" value={editedConfig.hero.backgroundImage} onChange={(e) => handleInputChange('hero', 'backgroundImage', e.target.value)} />
@@ -396,7 +396,7 @@ ${config.couple.groom.name} & ${config.couple.bride.name}`
 
               {activeTab === 'cinematic' && (
                 <div className="space-y-6">
-                  <h2 className="text-2xl font-serif font-bold text-gray-800 mb-6">Cinematic Intro</h2>
+                  <h2 className="text-2xl font-serif font-bold text-gray-800 mb-6">Bagian Sinematik</h2>
                   <div className="bg-gray-50 rounded-xl p-6 border-2 border-gray-200">
                     <div className="space-y-4">
                       <InputField label="Video Source URL" type="url" value={editedConfig.cinematic.videoSrc} onChange={(e) => handleInputChange('cinematic', 'videoSrc', e.target.value)} />
@@ -408,23 +408,23 @@ ${config.couple.groom.name} & ${config.couple.bride.name}`
               
               {activeTab === 'invitation' && (
                 <div className="space-y-6">
-                  <h2 className="text-2xl font-serif font-bold text-gray-800 mb-6">Invitation Modal</h2>
+                  <h2 className="text-2xl font-serif font-bold text-gray-800 mb-6">Bagian Undangan</h2>
                   <div className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl p-6">
                     <div className="space-y-4">
                       <InputField 
-                        label="Title" 
+                        label="Judul" 
                         value={editedConfig.invitation.title} 
                         onChange={(e) => handleInputChange('invitation', 'title', e.target.value)} 
                         focusColor="focus:ring-indigo-500"
                       />
                       <InputField 
-                        label="Subtitle" 
+                        label="SubJudul" 
                         value={editedConfig.invitation.subtitle} 
                         onChange={(e) => handleInputChange('invitation', 'subtitle', e.target.value)} 
                         focusColor="focus:ring-indigo-500"
                       />
                       <InputField 
-                        label="Button Text" 
+                        label="Tombol Teks" 
                         value={editedConfig.invitation.buttonText} 
                         onChange={(e) => handleInputChange('invitation', 'buttonText', e.target.value)} 
                         focusColor="focus:ring-indigo-500"
@@ -443,12 +443,12 @@ ${config.couple.groom.name} & ${config.couple.bride.name}`
 
               {activeTab === 'wedding' && (
                   <div className="space-y-6">
-                      <h2 className="text-2xl font-serif font-bold text-gray-800 mb-6">Wedding Date & Time</h2>
+                      <h2 className="text-2xl font-serif font-bold text-gray-800 mb-6">Tanggal & Waktu Pernikahan</h2>
                       <div className="bg-gradient-to-br from-rose-50 to-orange-50 rounded-xl p-6">
                           <div className="space-y-4">
-                              <InputField label="Wedding Date" type="date" value={editedConfig.wedding.date} onChange={(e) => handleInputChange('wedding', 'date', e.target.value)} />
-                              <InputField label="Display Date Text" value={editedConfig.wedding.dateDisplay} onChange={(e) => handleInputChange('wedding', 'dateDisplay', e.target.value)} placeholder="e.g., Sabtu, 22 November 2025" />
-                              <InputField label="Time" type="time" value={editedConfig.wedding.time} onChange={(e) => handleInputChange('wedding', 'time', e.target.value)} />
+                              <InputField label="Tanggal Pernikahan" type="date" value={editedConfig.wedding.date} onChange={(e) => handleInputChange('wedding', 'date', e.target.value)} />
+                              <InputField label="Tampilan Tanggal Teks" value={editedConfig.wedding.dateDisplay} onChange={(e) => handleInputChange('wedding', 'dateDisplay', e.target.value)} placeholder="e.g., Sabtu, 22 November 2025" />
+                              <InputField label="Jam" type="time" value={editedConfig.wedding.time} onChange={(e) => handleInputChange('wedding', 'time', e.target.value)} />
                           </div>
                       </div>
                   </div>
@@ -456,19 +456,19 @@ ${config.couple.groom.name} & ${config.couple.bride.name}`
 
               {activeTab === 'events' && (
                   <div className="space-y-6">
-                      <h2 className="text-2xl font-serif font-bold text-gray-800 mb-6">Event Details</h2>
+                      <h2 className="text-2xl font-serif font-bold text-gray-800 mb-6">Detail Acara</h2>
                       {editedConfig.events.map((event, index) => (
                           <div key={event.id} className="bg-gray-50 rounded-xl p-6 border-2 border-gray-200">
-                              <h3 className="text-xl font-semibold text-gray-800 mb-4">Event {index + 1}: {event.title}</h3>
+                              <h3 className="text-xl font-semibold text-gray-800 mb-4">Acara {index + 1}: {event.title}</h3>
                               <div className="grid md:grid-cols-2 gap-4">
-                                <InputField label="Title" value={event.title} onChange={(e) => handleInputChange('events', 'title', e.target.value, index)} />
-                                <InputField label="Time" value={event.time} onChange={(e) => handleInputChange('events', 'time', e.target.value, index)} />
-                                <InputField label="Duration" value={event.duration} onChange={(e) => handleInputChange('events', 'duration', e.target.value, index)} />
-                                <InputField label="Location" value={event.location} onChange={(e) => handleInputChange('events', 'location', e.target.value, index)} />
-                                <div className="md:col-span-2"><InputField label="Address" value={event.address} onChange={(e) => handleInputChange('events', 'address', e.target.value, index)} /></div>
-                                <InputField label="Phone" type="tel" value={event.phone} onChange={(e) => handleInputChange('events', 'phone', e.target.value, index)} />
+                                <InputField label="Judul" value={event.title} onChange={(e) => handleInputChange('events', 'title', e.target.value, index)} />
+                                <InputField label="Jam" value={event.time} onChange={(e) => handleInputChange('events', 'time', e.target.value, index)} />
+                                <InputField label="Durasi" value={event.duration} onChange={(e) => handleInputChange('events', 'duration', e.target.value, index)} />
+                                <InputField label="Lokasi" value={event.location} onChange={(e) => handleInputChange('events', 'location', e.target.value, index)} />
+                                <div className="md:col-span-2"><InputField label="Alamat" value={event.address} onChange={(e) => handleInputChange('events', 'address', e.target.value, index)} /></div>
+                                <InputField label="Telepon" type="tel" value={event.phone} onChange={(e) => handleInputChange('events', 'phone', e.target.value, index)} />
                                 <InputField label="Email" type="email" value={event.email} onChange={(e) => handleInputChange('events', 'email', e.target.value, index)} />
-                                <div className="md:col-span-2"><TextareaField label="Description" value={event.description} onChange={(e) => handleInputChange('events', 'description', e.target.value, index)} /></div>
+                                <div className="md:col-span-2"><TextareaField label="Deskripsi" value={event.description} onChange={(e) => handleInputChange('events', 'description', e.target.value, index)} /></div>
                               </div>
                           </div>
                       ))}
@@ -477,15 +477,15 @@ ${config.couple.groom.name} & ${config.couple.bride.name}`
 
               {activeTab === 'story' && (
                 <div className="space-y-6">
-                    <h2 className="text-2xl font-serif font-bold text-gray-800 mb-6">Our Story Timeline</h2>
+                    <h2 className="text-2xl font-serif font-bold text-gray-800 mb-6">Kisah Perjalanan Kami</h2>
                     {editedConfig.story.map((storyItem, index) => (
                         <div key={`story-${index}`} className="bg-gray-50 rounded-xl p-6 border-2 border-gray-200">
-                            <h3 className="text-xl font-semibold text-gray-800 mb-4">Story Point {index + 1}: {storyItem.title}</h3>
+                            <h3 className="text-xl font-semibold text-gray-800 mb-4">Poin Ke {index + 1}: {storyItem.title}</h3>
                             <div className="grid md:grid-cols-2 gap-4">
-                                <InputField label="Title" value={storyItem.title} onChange={(e) => handleInputChange('story', 'title', e.target.value, index)} />
-                                <InputField label="Date" value={storyItem.date} onChange={(e) => handleInputChange('story', 'date', e.target.value, index)} />
+                                <InputField label="Judul" value={storyItem.title} onChange={(e) => handleInputChange('story', 'title', e.target.value, index)} />
+                                <InputField label="Tanggal" value={storyItem.date} onChange={(e) => handleInputChange('story', 'date', e.target.value, index)} />
                                 <div className="md:col-span-2"><InputField label="Image URL" type="url" value={storyItem.image} onChange={(e) => handleInputChange('story', 'image', e.target.value, index)} /></div>
-                                <div className="md:col-span-2"><TextareaField label="Description" value={storyItem.description} onChange={(e) => handleInputChange('story', 'description', e.target.value, index)} /></div>
+                                <div className="md:col-span-2"><TextareaField label="Deskripsi" value={storyItem.description} onChange={(e) => handleInputChange('story', 'description', e.target.value, index)} /></div>
                             </div>
                         </div>
                     ))}
@@ -494,32 +494,32 @@ ${config.couple.groom.name} & ${config.couple.bride.name}`
 
               {activeTab === 'prayerLetter' && (
                 <div className="space-y-6">
-                  <h2 className="text-2xl font-serif font-bold text-gray-800 mb-6">Prayer Letter Content</h2>
+                  <h2 className="text-2xl font-serif font-bold text-gray-800 mb-6">Bagian Pesan dan Doa</h2>
                   <div className="bg-gray-50 rounded-xl p-6 border-2 border-gray-200">
-                    <p className="text-sm text-gray-600 mb-4">Edit the content of the prayer letter. The couple's names are added automatically at the end.</p>
+                    <p className="text-sm text-gray-600 mb-4">Catatan. Nama pasangan akan ditambahkan otomatis di akhir.</p>
                     <div className="space-y-4">
                       <TextareaField 
-                        label="Greeting" 
+                        label="Salam Pembuka" 
                         value={editedConfig.prayerLetter?.greeting || ''} 
                         onChange={(e) => handleInputChange('prayerLetter', 'greeting', e.target.value)} 
                       />
                       <TextareaField 
-                        label="Body Paragraph 1" 
+                        label="Paragraf ke 1" 
                         value={editedConfig.prayerLetter?.body1 || ''} 
                         onChange={(e) => handleInputChange('prayerLetter', 'body1', e.target.value)} 
                       />
                       <TextareaField 
-                        label="Body Paragraph 2" 
+                        label="Paragraf ke 2" 
                         value={editedConfig.prayerLetter?.body2 || ''} 
                         onChange={(e) => handleInputChange('prayerLetter', 'body2', e.target.value)} 
                       />
                       <TextareaField 
-                        label="Body Paragraph 3" 
+                        label="Paragraf ke 3" 
                         value={editedConfig.prayerLetter?.body3 || ''} 
                         onChange={(e) => handleInputChange('prayerLetter', 'body3', e.target.value)} 
                       />
                       <TextareaField 
-                        label="Closing" 
+                        label="Penutup" 
                         value={editedConfig.prayerLetter?.closing || ''} 
                         onChange={(e) => handleInputChange('prayerLetter', 'closing', e.target.value)} 
                       />
@@ -530,11 +530,11 @@ ${config.couple.groom.name} & ${config.couple.bride.name}`
 
                {activeTab === 'music' && (
                 <div className="space-y-6">
-                  <h2 className="text-2xl font-serif font-bold text-gray-800 mb-6">Music Configuration</h2>
+                  <h2 className="text-2xl font-serif font-bold text-gray-800 mb-6">Konfigurasi Musik</h2>
                   <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-6">
                     <div className="space-y-4">
                       <InputField label="Audio Source URL" type="url" value={editedConfig.music.audioSrc} onChange={(e) => handleInputChange('music', 'audioSrc', e.target.value)} focusColor="focus:ring-purple-500" />
-                      <p className="text-sm text-gray-600">Lyrics configuration requires manual editing in the code for now.</p>
+                      <p className="text-sm text-gray-600">Konfigurasi lirik memerlukan pengeditan kode manual dalam file Json ada di tab Pengaturan & Data.</p>
                     </div>
                   </div>
                 </div>
@@ -542,15 +542,15 @@ ${config.couple.groom.name} & ${config.couple.bride.name}`
 
               {activeTab === 'gallery' && (
                 <div className="space-y-6">
-                    <h2 className="text-2xl font-serif font-bold text-gray-800 mb-6">Gallery Images</h2>
+                    <h2 className="text-2xl font-serif font-bold text-gray-800 mb-6">Gambar Galeri</h2>
                     {editedConfig.gallery.map((image, index) => (
                         <div key={`gallery-${index}`} className="bg-gray-50 rounded-xl p-6 border-2 border-gray-200">
-                            <h3 className="text-xl font-semibold text-gray-800 mb-4">Image {index + 1}</h3>
+                            <h3 className="text-xl font-semibold text-gray-800 mb-4">Gambar Ke  {index + 1}</h3>
                             <div className="grid md:grid-cols-2 gap-4">
                                 <div className="md:col-span-2"><InputField label="Image URL" type="url" value={image.url} onChange={(e) => handleInputChange('gallery', 'url', e.target.value, index)} /></div>
-                                <InputField label="Title" value={image.title} onChange={(e) => handleInputChange('gallery', 'title', e.target.value, index)} />
+                                <InputField label="Judul" value={image.title} onChange={(e) => handleInputChange('gallery', 'title', e.target.value, index)} />
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Type</label>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Tipe</label>
                                     <select
                                         value={image.type}
                                         onChange={(e) => handleInputChange('gallery', 'type', e.target.value, index)}
@@ -568,15 +568,15 @@ ${config.couple.groom.name} & ${config.couple.bride.name}`
 
               {activeTab === 'donations' && (
                   <div className="space-y-6">
-                      <h2 className="text-2xl font-serif font-bold text-gray-800 mb-6">Donation Accounts</h2>
+                      <h2 className="text-2xl font-serif font-bold text-gray-800 mb-6">Akun Transaksi Pengantin</h2>
                       {editedConfig.donations.map((donation, index) => (
                           <div key={donation.id} className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-6 border-2 border-green-200">
-                              <h3 className="text-xl font-semibold text-green-700 mb-4">Account {index + 1}</h3>
+                              <h3 className="text-xl font-semibold text-green-700 mb-4">Akun {index + 1}</h3>
                               <div className="grid md:grid-cols-2 gap-4">
-                                <InputField label="Type" value={donation.type} onChange={(e) => handleInputChange('donations', 'type', e.target.value, index)} focusColor="focus:ring-green-500" />
+                                <InputField label="Tipe" value={donation.type} onChange={(e) => handleInputChange('donations', 'type', e.target.value, index)} focusColor="focus:ring-green-500" />
                                 <InputField label="Bank/E-Wallet" value={donation.bank} onChange={(e) => handleInputChange('donations', 'bank', e.target.value, index)} focusColor="focus:ring-green-500" />
-                                <InputField label="Account Number" value={donation.accountNumber} onChange={(e) => handleInputChange('donations', 'accountNumber', e.target.value, index)} focusColor="focus:ring-green-500" />
-                                <InputField label="Account Name" value={donation.accountName} onChange={(e) => handleInputChange('donations', 'accountName', e.target.value, index)} focusColor="focus:ring-green-500" />
+                                <InputField label="Nomor Akun" value={donation.accountNumber} onChange={(e) => handleInputChange('donations', 'accountNumber', e.target.value, index)} focusColor="focus:ring-green-500" />
+                                <InputField label="Nama Akun" value={donation.accountName} onChange={(e) => handleInputChange('donations', 'accountName', e.target.value, index)} focusColor="focus:ring-green-500" />
                                 <div className="md:col-span-2">
                                   <InputField 
                                     label="QR Code Image URL (Optional)" 
@@ -595,9 +595,9 @@ ${config.couple.groom.name} & ${config.couple.bride.name}`
 
               {activeTab === 'theme' && (
                 <div className="space-y-6">
-                  <h2 className="text-2xl font-serif font-bold text-gray-800 mb-6">Theme Colors</h2>
+                  <h2 className="text-2xl font-serif font-bold text-gray-800 mb-6">Warna Tema</h2>
                   <div className="bg-gray-50 rounded-xl p-6 border-2 border-gray-200">
-                    <p className="text-sm text-gray-600 mb-6">Customize the main colors of your website. Changes apply to various elements like buttons and highlights.</p>
+                    <p className="text-sm text-gray-600 mb-6">Sesuaikan warna utama situs web Anda. Perubahan berlaku untuk berbagai elemen seperti tombol dan sorotan.</p>
                     <div className="grid md:grid-cols-3 gap-6">
                       <ColorInputField label="Primary" value={editedConfig.theme?.primary || '#f43f5e'} onChange={e => handleInputChange('theme', 'primary', e.target.value)} />
                       <ColorInputField label="Secondary" value={editedConfig.theme?.secondary || '#f97316'} onChange={e => handleInputChange('theme', 'secondary', e.target.value)} />
@@ -609,44 +609,44 @@ ${config.couple.groom.name} & ${config.couple.bride.name}`
               
               {activeTab === 'whatsapp' && (
                 <div className="space-y-6">
-                  <h2 className="text-2xl font-serif font-bold text-gray-800 mb-6">Send Bulk WhatsApp Invitations</h2>
+                  <h2 className="text-2xl font-serif font-bold text-gray-800 mb-6">Kirim Undangan WhatsApp</h2>
                   
                   <div className="grid md:grid-cols-2 gap-6">
                       <div className="bg-gray-50 rounded-xl p-6 border-2 border-gray-200">
                           <h3 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
-                              <PlusCircle className="mr-2 text-green-600" size={22} /> Add New Guest
+                              <PlusCircle className="mr-2 text-green-600" size={22} /> Tambahkan Tamu
                           </h3>
                           <form onSubmit={handleAddGuest} className="space-y-3">
-                              <InputField label="Guest Name" value={newName} onChange={(e) => setNewName(e.target.value)} placeholder="Enter full name" />
-                              <InputField label="Phone Number" value={newPhone} onChange={(e) => setNewPhone(e.target.value)} placeholder="e.g., 628123456789" />
+                              <InputField label="Nama Tamu" value={newName} onChange={(e) => setNewName(e.target.value)} placeholder="Masukkan Nama Tamu" />
+                              <InputField label="Telepon" value={newPhone} onChange={(e) => setNewPhone(e.target.value)} placeholder="e.g., 628123456789" />
                               <button type="submit" disabled={isAdding} className="w-full flex items-center justify-center space-x-2 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm transition-colors disabled:bg-gray-400">
                                   {isAdding ? <Loader2 className="animate-spin" size={18} /> : <Save size={16} />}
-                                  <span>{isAdding ? 'Adding...' : 'Add Guest'}</span>
+                                  <span>{isAdding ? 'Proses...' : 'Tambah Tamu'}</span>
                               </button>
                           </form>
                       </div>
 
                       <div className="bg-gray-50 rounded-xl p-6 border-2 border-gray-200">
                           <h3 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
-                              <FileUp className="mr-2 text-blue-600" size={22} /> Import from CSV
+                              <FileUp className="mr-2 text-blue-600" size={22} /> Impor dari CSV
                           </h3>
                           <input type="file" ref={importFileRef} onChange={handleImportCSV} className="hidden" accept=".csv" />
                           <button onClick={handleImportGuestsClick} disabled={isImporting} className="w-full flex items-center justify-center space-x-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm transition-colors disabled:bg-gray-400">
                               {isImporting ? <Loader2 className="animate-spin" size={18} /> : <Upload size={16} />}
-                              <span>{isImporting ? 'Importing...' : 'Import Guests from CSV'}</span>
+                              <span>{isImporting ? 'Impor...' : 'Impor Tamu dari CSV'}</span>
                           </button>
                           <p className="text-xs text-gray-500 mt-3">
-                              <b>Format:</b> Create a CSV file with two columns: `Name,Phone`.
+                              <b>Format:</b> Buat file CSV dengan dua kolom: `Name,Phone`.
                               <br />
-                              Example: `John Doe,628123456789`
+                              Contoh: `John Doe,628123456789`
                           </p>
                       </div>
                   </div>
 
                   <div className="bg-gray-50 rounded-xl p-6 border-2 border-gray-200">
-                    <h3 className="text-xl font-semibold text-gray-800 mb-4">Message Template</h3>
+                    <h3 className="text-xl font-semibold text-gray-800 mb-4">Pesan Template</h3>
                     <p className="text-sm text-gray-500 mb-2">
-                      Edit the message below. `*guestname*` will be replaced with the guest's name, and `link url to guest name` will be replaced with their unique invitation link.
+                      Tulisan ini `*guestname*` akan berubah otomatis sesuai nama tamu dan tulisan link ini juga `link url to guest name` akan otomatis berubah menjadi link untuk tamu ke web undangan.
                     </p>
                     <TextareaField 
                       label="WhatsApp Message" 
@@ -657,19 +657,19 @@ ${config.couple.groom.name} & ${config.couple.bride.name}`
                   </div>
 
                   <div className="bg-white rounded-xl p-6 shadow-md">
-                    <h3 className="text-xl font-semibold text-gray-800 mb-4">Guest List ({guests.length})</h3>
+                    <h3 className="text-xl font-semibold text-gray-800 mb-4">Daftar Tamu ({guests.length})</h3>
                     <div className="overflow-x-auto max-h-96">
                       <table className="w-full text-left">
                         <thead className="bg-gray-100 sticky top-0">
                           <tr>
-                            <th className="p-3 font-semibold text-sm text-gray-600">Name</th>
-                            <th className="p-3 font-semibold text-sm text-gray-600">Phone</th>
-                            <th className="p-3 font-semibold text-sm text-gray-600 text-center">Actions</th>
+                            <th className="p-3 font-semibold text-sm text-gray-600">Nama</th>
+                            <th className="p-3 font-semibold text-sm text-gray-600">Telepon</th>
+                            <th className="p-3 font-semibold text-sm text-gray-600 text-center">Aksi</th>
                           </tr>
                         </thead>
                         <tbody>
                           {loadingGuests ? (
-                            <tr><td colSpan={3} className="text-center p-4 text-gray-500 flex items-center justify-center"><Loader2 className="animate-spin mr-2" /> Loading guests...</td></tr>
+                            <tr><td colSpan={3} className="text-center p-4 text-gray-500 flex items-center justify-center"><Loader2 className="animate-spin mr-2" /> Loading Tamu...</td></tr>
                           ) : guests.length > 0 ? (
                             guests.map(guest => (
                               <tr key={guest.id} className="border-b border-gray-100 hover:bg-gray-50">
@@ -682,7 +682,7 @@ ${config.couple.groom.name} & ${config.couple.bride.name}`
                                       disabled={!guest.phone || deletingId === guest.id}
                                       className="flex items-center space-x-1 bg-green-500 hover:bg-green-600 text-white px-3 py-1.5 rounded-lg text-xs transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
                                     >
-                                      <Send size={14} /> <span>Send</span>
+                                      <Send size={14} /> <span>Kirim</span>
                                     </button>
                                     <button
                                       onClick={() => handleDeleteGuest(guest)}
@@ -697,7 +697,7 @@ ${config.couple.groom.name} & ${config.couple.bride.name}`
                               </tr>
                             ))
                           ) : (
-                            <tr><td colSpan={3} className="text-center p-4 text-gray-500">No guests found. Add guests above or import a CSV file.</td></tr>
+                            <tr><td colSpan={3} className="text-center p-4 text-gray-500">Tidak ada tamu yang ditemukan. Tambahkan tamu di atas atau impor berkas CSV.</td></tr>
                           )}
                         </tbody>
                       </table>
@@ -708,20 +708,20 @@ ${config.couple.groom.name} & ${config.couple.bride.name}`
 
               {activeTab === 'json' && (
                 <div className="space-y-6">
-                  <h2 className="text-2xl font-serif font-bold text-gray-800 mb-6">Settings & Data Management</h2>
+                  <h2 className="text-2xl font-serif font-bold text-gray-800 mb-6">Manajemen Pengaturan & Data</h2>
                   
                   <div className="bg-gray-50 rounded-xl p-6 border-2 border-gray-200">
-                    <h3 className="text-xl font-semibold text-gray-800 mb-4">Import / Export</h3>
+                    <h3 className="text-xl font-semibold text-gray-800 mb-4">Impor / Ekspor</h3>
                     <div className="flex space-x-4">
                       <input type="file" ref={fileInputRef} onChange={handleFileChange} className="hidden" accept=".json" />
                       <button onClick={handleImportClick} className="flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors">
-                        <Upload size={18} /> <span>Import JSON</span>
+                        <Upload size={18} /> <span>Impor JSON</span>
                       </button>
                       <button onClick={handleExport} className="flex items-center space-x-2 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-colors">
-                        <Download size={18} /> <span>Export JSON</span>
+                        <Download size={18} /> <span>Ekspor JSON</span>
                       </button>
                     </div>
-                    <p className="text-xs text-gray-500 mt-2">Importing a file will overwrite your current unsaved changes.</p>
+                    <p className="text-xs text-gray-500 mt-2">Mengimpor berkas akan menimpa perubahan yang belum disimpan saat ini.</p>
                   </div>
                   
                   <div className="bg-gray-800 rounded-xl p-6">

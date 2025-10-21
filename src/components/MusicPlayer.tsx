@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Music, BookText } from 'lucide-react';
+import { Music, BookText, Play, Pause, Volume2, VolumeX, X, Disc3 } from 'lucide-react';
 
 interface Lyric {
   time: number;
@@ -10,8 +10,8 @@ interface MusicPlayerProps {
   lyrics: Lyric[];
   initialShowLyrics?: boolean;
   audioSrc: string;
-  autoPlay?: boolean;       // Trigger musik
-  autoPlayLyrics?: boolean; // Trigger lirik otomatis
+  autoPlay?: boolean;
+  autoPlayLyrics?: boolean;
 }
 
 const MusicPlayer: React.FC<MusicPlayerProps> = ({
@@ -22,97 +22,174 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
   autoPlayLyrics = false,
 }) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const [isPlaying, setIsPlaying] = useState(autoPlay);
+  const [isPlaying, setIsPlaying] = useState(false);
   const [showLyrics, setShowLyrics] = useState(initialShowLyrics || autoPlayLyrics);
   const [currentLyricIndex, setCurrentLyricIndex] = useState(-1);
   const [typedLyric, setTypedLyric] = useState('');
+  const [autoplayBlocked, setAutoplayBlocked] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
+  const [hasInteracted, setHasInteracted] = useState(false);
+  const [showControls, setShowControls] = useState(false);
 
-  // Autoplay musik
   useEffect(() => {
-    if (autoPlay && audioRef.current) {
-      audioRef.current.play().catch((err) => console.log('Autoplay blocked:', err));
-      setIsPlaying(true);
-    }
-  }, [autoPlay]);
+    if (!autoPlay || !audioRef.current || hasInteracted) return;
 
-  // Toggle musik
+    const audio = audioRef.current;
+    const playPromise = audio.play();
+
+    if (playPromise !== undefined) {
+      playPromise
+        .then(() => {
+          setIsPlaying(true);
+          setAutoplayBlocked(false);
+        })
+        .catch((error) => {
+          console.log('Autoplay blocked, waiting for user interaction:', error);
+          setAutoplayBlocked(true);
+          setIsPlaying(false);
+        });
+    }
+  }, [autoPlay, hasInteracted]);
+
   const toggleMusic = () => {
     if (!audioRef.current) return;
-    if (isPlaying) audioRef.current.pause();
-    else audioRef.current.play().catch((e) => console.error('Playback error:', e));
-    setIsPlaying(!isPlaying);
+    setHasInteracted(true);
+    if (isPlaying) {
+      audioRef.current.pause();
+      setIsPlaying(false);
+    } else {
+      audioRef.current.play().catch((error) => {
+        console.error('Playback error:', error);
+      });
+    }
+    // Update isPlaying state based on audio events for accuracy
+    audioRef.current.onplaying = () => setIsPlaying(true);
+    audioRef.current.onpause = () => setIsPlaying(false);
   };
 
-  // Sync lyrics dengan audio
+  const toggleMute = () => {
+    if (!audioRef.current) return;
+    const newMutedState = !audioRef.current.muted;
+    audioRef.current.muted = newMutedState;
+    setIsMuted(newMutedState);
+  };
+
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio || !showLyrics) return;
-
-    const interval = setInterval(() => {
+    const handleTimeUpdate = () => {
       const currentTime = audio.currentTime;
-      let nextIndex = -1;
-
-      for (let i = lyrics.length - 1; i >= 0; i--) {
-        if (currentTime >= lyrics[i].time) {
-          nextIndex = i;
-          break;
-        }
+      const newIndex = lyrics.findIndex((lyric, index) => {
+        const nextLyric = lyrics[index + 1];
+        return currentTime >= lyric.time && (!nextLyric || currentTime < nextLyric.time);
+      });
+      if (newIndex !== -1 && newIndex !== currentLyricIndex) {
+        setCurrentLyricIndex(newIndex);
       }
+    };
+    audio.addEventListener('timeupdate', handleTimeUpdate);
+    return () => audio.removeEventListener('timeupdate', handleTimeUpdate);
+  }, [showLyrics, lyrics, currentLyricIndex]);
 
-      if (nextIndex !== currentLyricIndex && nextIndex >= 0) {
-        setCurrentLyricIndex(nextIndex);
-        setTypedLyric('');
-      }
-    }, 100);
-
-    return () => clearInterval(interval);
-  }, [currentLyricIndex, showLyrics, lyrics]);
-
-  // Typewriter effect
   useEffect(() => {
     if (currentLyricIndex < 0 || !showLyrics) return;
     const line = lyrics[currentLyricIndex].text;
+    if (typedLyric === line) return;
+    
     let i = 0;
+    setTypedLyric('');
     const interval = setInterval(() => {
       setTypedLyric(line.slice(0, i + 1));
       i++;
-      if (i >= line.length) clearInterval(interval);
+      if (i > line.length) clearInterval(interval);
     }, 50);
     return () => clearInterval(interval);
   }, [currentLyricIndex, showLyrics, lyrics]);
 
   return (
     <>
-      <div className="fixed bottom-6 right-6 flex items-center space-x-3 z-50">
-        {/* Lirik typewriter */}
-        <div
-          className={`transition-all duration-700 ease-in-out overflow-hidden ${
-            showLyrics ? 'opacity-100 translate-x-0 max-w-xs' : 'opacity-0 translate-x-20 max-w-0'
-          }`}
+      <audio ref={audioRef} loop src={audioSrc} preload="auto" />
+
+      {/* Lyrics Container - Positioned responsively */}
+      <div
+        className={`fixed z-40 p-4 w-full transition-all duration-500 ease-in-out pointer-events-none
+          ${showLyrics ? 'bottom-20 opacity-100' : 'bottom-12 opacity-0'}
+          md:left-[6rem] md:w-auto md:bottom-8 md:p-0
+          ${showControls ? 'md:left-[16rem]' : 'md:left-[10rem]'}
+        `}
+      >
+        <div className="flex justify-center md:justify-start">
+            <div className="bg-white/90 backdrop-blur-sm text-gray-800 text-sm rounded-xl shadow-lg px-4 py-3 border border-rose-200 text-center pointer-events-auto max-w-xs md:max-w-md">
+              {typedLyric || (isPlaying ? '' : '♪ Tekan Putar')}
+            </div>
+        </div>
+      </div>
+
+      {/* Main Player Controls */}
+      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 md:left-6 md:translate-x-0 flex items-center z-50">
+        
+        {/* Main Toggle Button */}
+        <button
+          onClick={() => setShowControls(!showControls)}
+          className="relative bg-gradient-to-br from-rose-500 to-orange-500 hover:from-rose-600 hover:to-orange-600 text-white w-16 h-16 flex items-center justify-center rounded-full shadow-lg transition-all duration-300 hover:scale-110"
+          title="Buka Kontrol Musik"
         >
-          <div className="bg-white/90 backdrop-blur-md text-gray-800 text-sm rounded-xl shadow-lg px-4 py-3 border border-rose-200 w-48 animate-fade-slide whitespace-pre-line">
-            {typedLyric}
+          {autoplayBlocked && !hasInteracted && (
+            <span className="absolute -top-1 -right-1 flex h-4 w-4">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-4 w-4 bg-yellow-500 border-2 border-white"></span>
+            </span>
+          )}
+          <div className={`transition-transform duration-500 ease-in-out ${showControls ? 'rotate-180' : 'rotate-0'}`}>
+            {showControls ? <X size={28} /> : <Disc3 size={28} className={isPlaying ? 'animate-spin-slow' : ''} />}
+          </div>
+        </button>
+
+        {/* Collapsible secondary controls */}
+        <div className={`transition-all duration-500 ease-in-out ${showControls ? 'max-w-sm opacity-100' : 'max-w-0 opacity-0'} overflow-hidden ml-3`}>
+          <div className="bg-white/90 backdrop-blur-sm rounded-xl shadow-lg flex items-center p-1.5 space-x-1">
+            <button
+              onClick={toggleMusic}
+              className="p-2.5 rounded-lg text-rose-600 hover:bg-rose-100 transition-colors"
+              title={isPlaying ? 'Jeda' : 'Putar'}
+            >
+              {isPlaying ? <Pause size={22} fill="currentColor" /> : <Play size={22} fill="currentColor" className="ml-0.5" />}
+            </button>
+
+            {isPlaying && (
+              <button
+                onClick={toggleMute}
+                className="p-2.5 rounded-lg text-orange-600 hover:bg-orange-100 transition-colors"
+                title={isMuted ? 'Bunyikan' : 'Bisukan'}
+              >
+                {isMuted ? <VolumeX size={22} /> : <Volume2 size={22} />}
+              </button>
+            )}
+
+            <button
+              onClick={() => setShowLyrics(!showLyrics)}
+              className={`p-2.5 rounded-lg transition-colors ${
+                showLyrics ? 'bg-pink-500 text-white' : 'text-pink-600 hover:bg-pink-100'
+              }`}
+              title="Tampilkan Lirik"
+            >
+              <BookText size={22} />
+            </button>
           </div>
         </div>
-
-        {/* Tombol Lirik */}
-        <button
-          onClick={() => setShowLyrics(!showLyrics)}
-          className="bg-pink-500 hover:bg-pink-600 text-white p-4 rounded-full shadow-lg transition-transform hover:scale-110"
-        >
-          <BookText size={22} />
-        </button>
-
-        {/* Tombol Musik */}
-        <button
-          onClick={toggleMusic}
-          className="bg-rose-600 hover:bg-rose-700 text-white p-4 rounded-full shadow-lg transition-transform hover:scale-110"
-        >
-          <Music size={24} className={`${isPlaying ? 'animate-spin-slow text-yellow-200' : ''}`} />
-        </button>
-
-        <audio ref={audioRef} loop src={audioSrc} />
       </div>
+
+      {/* Autoplay blocked prompt */}
+      {autoplayBlocked && !hasInteracted && (
+        <div className="fixed bottom-28 left-1/2 -translate-x-1/2 w-11/12 max-w-xs md:w-auto md:left-6 md:translate-x-0 z-50 animate-fade-in pointer-events-none">
+          <div className="bg-white rounded-lg shadow-xl p-4 border-2 border-rose-300 text-center md:text-left">
+            <p className="text-sm text-gray-700 font-semibold">🎵 Sentuh ikon musik</p>
+            <p className="text-xs text-gray-500 mt-1">
+              Browser Anda memerlukan interaksi untuk memulai audio.
+            </p>
+          </div>
+        </div>
+      )}
     </>
   );
 };

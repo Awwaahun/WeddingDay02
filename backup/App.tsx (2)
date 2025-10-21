@@ -77,16 +77,11 @@ function App() {
   const onInvitationOpened = () => {
     handleOpenInvitation();
     setIsModalOpen(false);
-
-    // Tampilkan dan picu pemutar musik segera setelah pengguna mengklik
-    // untuk memastikan browser mengizinkan audio untuk diputar.
-    setShowMusicButton(true);
-    setPlayMusicTrigger(true);
-
-    // Tunda visibilitas konten utama untuk animasi transisi yang mulus.
     setTimeout(() => {
       setMainVisible(true);
       document.body.style.overflow = 'auto';
+      setShowMusicButton(true);
+      setPlayMusicTrigger(true);
     }, 500);
   };
 
@@ -183,7 +178,7 @@ function App() {
             <MusicPlayer
               lyrics={weddingConfig.music.lyrics}
               audioSrc={weddingConfig.music.audioSrc}
-              initialShowLyrics={true}
+              initialShowLyrics={false}
               autoPlay={playMusicTrigger}
               autoPlayLyrics={playMusicTrigger}
             />
