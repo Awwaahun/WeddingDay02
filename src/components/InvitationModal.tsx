@@ -1,7 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Send, Play } from 'lucide-react';
+import React from 'react';
+import { Send } from 'lucide-react';
 import type { WeddingConfig } from '../hooks/useWeddingConfig';
-import { useDeviceDetection } from '../hooks/useDeviceDetection';
 
 interface InvitationModalProps {
   isOpen: boolean;
@@ -11,48 +10,6 @@ interface InvitationModalProps {
 }
 
 const InvitationModal: React.FC<InvitationModalProps> = ({ isOpen, onOpen, config, guestName }) => {
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const [videoPlaying, setVideoPlaying] = useState(false);
-  const [showPlayButton, setShowPlayButton] = useState(false);
-  const { requiresUserInteraction } = useDeviceDetection();
-
-  useEffect(() => {
-    if (!isOpen || !videoRef.current) return;
-
-    const video = videoRef.current;
-
-    // Try to autoplay
-    const playPromise = video.play();
-
-    if (playPromise !== undefined) {
-      playPromise
-        .then(() => {
-          // Autoplay started successfully
-          setVideoPlaying(true);
-          setShowPlayButton(false);
-        })
-        .catch((error) => {
-          // Autoplay was prevented
-          console.log('Autoplay prevented:', error);
-          setVideoPlaying(false);
-          setShowPlayButton(true);
-        });
-    }
-  }, [isOpen]);
-
-  const handlePlayVideo = () => {
-    if (videoRef.current) {
-      videoRef.current.play()
-        .then(() => {
-          setVideoPlaying(true);
-          setShowPlayButton(false);
-        })
-        .catch((error) => {
-          console.error('Failed to play video:', error);
-        });
-    }
-  };
-
   if (!isOpen) return null;
 
   // Create a dynamic, multi-line message for WhatsApp sharing.
@@ -64,48 +21,16 @@ const InvitationModal: React.FC<InvitationModalProps> = ({ isOpen, onOpen, confi
 
   return (
     <div className="fixed inset-0 z-[99] flex items-center justify-center bg-black transition-opacity duration-500 ease-in-out" style={{ opacity: isOpen ? 1 : 0 }}>
-      {/* Video Background */}
-      <div className="absolute inset-0 overflow-hidden">
-        <video
-          ref={videoRef}
-          key={config.invitation.backgroundVideo}
-          loop
-          muted
-          playsInline
-          preload="auto"
-          className="absolute top-0 left-0 w-full h-full object-cover"
-          src={config.invitation.backgroundVideo}
-        />
-        
-        {/* Fallback Image when video not playing */}
-        {!videoPlaying && (
-          <div 
-            className="absolute inset-0 bg-cover bg-center"
-            style={{ 
-              backgroundImage: `url(${config.hero.backgroundImage})`,
-              filter: 'brightness(0.7)'
-            }}
-          />
-        )}
-      </div>
-
-      {/* Dark Overlay */}
+       <video
+        key={config.invitation.backgroundVideo}
+        autoPlay
+        loop
+        muted
+        playsInline
+        className="absolute top-0 left-0 w-full h-full object-cover"
+        src={config.invitation.backgroundVideo}
+      />
       <div className="absolute inset-0 bg-black/70"></div>
-
-      {/* Play Button Overlay (shown when autoplay is blocked) */}
-      {showPlayButton && (
-        <button
-          onClick={handlePlayVideo}
-          className="absolute inset-0 flex items-center justify-center z-5 bg-black/20 hover:bg-black/30 transition-colors group"
-          aria-label="Play background video"
-        >
-          <div className="bg-white/90 hover:bg-white p-6 rounded-full shadow-2xl transition-all group-hover:scale-110">
-            <Play size={48} className="text-rose-600" />
-          </div>
-        </button>
-      )}
-
-      {/* Content */}
       <div className="relative z-10 text-center text-white p-8 max-w-lg mx-auto">
         {guestName && (
           <div className="mb-6 animate-fade-in" style={{ animationDelay: '0.2s' }}>
@@ -118,22 +43,22 @@ const InvitationModal: React.FC<InvitationModalProps> = ({ isOpen, onOpen, confi
         <p className="text-lg md:text-xl font-light">{config.invitation.subtitle}</p>
 
         <div className="mt-10 flex flex-col items-center gap-4">
-          <button
-            onClick={onOpen}
-            className="w-full max-w-xs px-8 py-3 bg-white text-gray-800 font-semibold rounded-full shadow-lg hover:bg-rose-100 transition-all duration-300 transform hover:scale-105"
-          >
-            {config.invitation.buttonText}
-          </button>
-          
-          <a
-            href={`https://wa.me/?text=${whatsappMessage}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-full max-w-xs px-8 py-3 bg-[#25D366] text-white font-semibold rounded-full shadow-lg hover:bg-[#128C7E] transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-2 animate-fade-in"
-          >
-            <Send size={18} />
-            Bagikan di WhatsApp
-          </a>
+            <button
+              onClick={onOpen}
+              className="w-full max-w-xs px-8 py-3 bg-white text-gray-800 font-semibold rounded-full shadow-lg hover:bg-rose-100 transition-all duration-300 transform hover:scale-105"
+            >
+              {config.invitation.buttonText}
+            </button>
+            
+            <a
+              href={`https://wa.me/?text=${whatsappMessage}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full max-w-xs px-8 py-3 bg-[#25D366] text-white font-semibold rounded-full shadow-lg hover:bg-[#128C7E] transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-2 animate-fade-in"
+            >
+              <Send size={18} />
+              Bagikan di WhatsApp
+            </a>
         </div>
       </div>
     </div>
