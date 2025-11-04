@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Heart, Calendar, Users, Gift, Wallet, MessageCircle, UserCircle, Send, Film } from 'lucide-react';
+import { Heart, Film } from 'lucide-react';
 import Hero from './components/Hero';
 import Countdown from './components/Countdown';
 import Couple from './components/Couple';
@@ -12,6 +12,7 @@ import GuestBook from './components/GuestBook';
 import LoadingScreen from './components/LoadingScreen';
 import InvitationModal from './components/InvitationModal';
 import FloralDecorations from './components/FloralDecorations';
+import FloatingNavbar from './components/FloatingNavbar';
 import { useInvitation } from './hooks/useInvitation';
 import MusicPlayer from './components/MusicPlayer';
 import PrayerDisplay from './components/PrayerDisplay';
@@ -26,7 +27,6 @@ function App() {
   const initialConfig = useWeddingConfig();
   const [weddingConfig, setWeddingConfig] = useState<WeddingConfig>(initialConfig);
   
-  const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('hero');
   const { isLoading, showInvitation, handleOpenInvitation } = useInvitation();
   const [mainVisible, setMainVisible] = useState(false);
@@ -49,8 +49,6 @@ function App() {
   
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
-      
       const sections = ['hero', 'couple', 'story', 'event', 'gallery', 'donation', 'rsvp', 'prayer'];
       for (const section of sections) {
         const element = document.getElementById(section);
@@ -131,39 +129,10 @@ function App() {
       <div className={`transition-opacity duration-1000 ease-in ${mainVisible ? 'opacity-100' : 'opacity-0'}`}>
         <div className="min-h-screen bg-background text-text font-sans overflow-x-hidden relative">
           
-          {mainVisible && <FloralDecorations activeSection={activeSection} />}
           
-          <nav
-            className={`fixed top-0 w-full z-[60] transition-all duration-300 ${
-              scrolled ? 'bg-white/80 backdrop-blur-sm shadow-md py-4' : 'bg-transparent py-6'
-            }`}
-          >
-            <div className="container mx-auto px-4">
-              <div className="flex justify-center items-center space-x-3 md:space-x-6">
-                {[
-                  { icon: Heart, label: 'Home', id: 'hero' },
-                  { icon: UserCircle, label: 'Couple', id: 'couple' },
-                  { icon: Users, label: 'Story', id: 'story' },
-                  { icon: Calendar, label: 'Event', id: 'event' },
-                  { icon: Gift, label: 'Gallery', id: 'gallery' },
-                  { icon: Wallet, label: 'Gift', id: 'donation' },
-                  { icon: MessageCircle, label: 'RSVP', id: 'rsvp' },
-                  { icon: Send, label: 'Prayer', id: 'prayer' },
-                ].map((item) => (
-                  <button
-                    key={item.id}
-                    onClick={() => scrollToSection(item.id)}
-                    className={`flex flex-col md:flex-row items-center space-x-0 md:space-x-2 transition-colors duration-300 ${
-                      scrolled ? 'text-text/80 hover:text-primary' : 'text-white/90 hover:text-white'
-                    } ${activeSection === item.id ? (scrolled ? 'text-primary' : 'text-white font-bold') : ''}`}
-                  >
-                    <item.icon size={18} />
-                    <span className="hidden md:inline text-sm font-medium">{item.label}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-          </nav>
+          
+          {/* Replace the old nav with FloatingNavbar */}
+          <FloatingNavbar activeSection={activeSection} scrollToSection={scrollToSection} />
 
           <main>
             <div id="hero"><Hero onAdminAccess={handleAdminAccess} config={weddingConfig} /></div>
