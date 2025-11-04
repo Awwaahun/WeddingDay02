@@ -131,8 +131,8 @@ export const useWeddingConfig = (): WeddingConfig => {
         image: 'https://pdjgcmcpdyosofpbjqfp.supabase.co/storage/v1/object/public/user-images/bce5e8b9-a9e5-4092-ba5a-6d20c534a01c/1762250582504.png?auto=compress&cs=tinysrgb&w=800',
         bio: 'Seorang arsitek penuh semangat yang mencintai seni, kopi, dan menjelajahi tempat-tempat tersembunyi di seluruh dunia.',
         parents: 'Putri dari Bapak Dedy & Ibu Martina',
-        instagram: '@sarahanggraini',
-        email: 'sarah@example.com',
+        instagram: '@bungasariputri',
+        email: 'putri@example.com',
       },
       groom: {
         name: 'Budi',
@@ -141,8 +141,8 @@ export const useWeddingConfig = (): WeddingConfig => {
         image: 'https://pdjgcmcpdyosofpbjqfp.supabase.co/storage/v1/object/public/user-images/bce5e8b9-a9e5-4092-ba5a-6d20c534a01c/1762250574822.png?auto=compress&cs=tinysrgb&w=800',
         bio: 'Seorang Software Engineer yang gemar mendaki, fotografi, dan memasak resep-resep baru.',
         parents: 'Putra dari Bapak Martono & Ibu Widya',
-        instagram: '@adamkurniawan',
-        email: 'adam@example.com',
+        instagram: '@budilaksono',
+        email: 'budi@example.com',
       },
     },
 
