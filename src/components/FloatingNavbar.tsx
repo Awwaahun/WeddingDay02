@@ -94,7 +94,7 @@ function FloatingNavbar({ activeSection, scrollToSection }) {
       {/* Mobile Floating Menu Button */}
       <button
         onClick={() => setIsMenuOpen(!isMenuOpen)}
-        className={`md:hidden fixed bottom-6 right-6 z-[70] w-14 h-14 rounded-full bg-gradient-to-r from-rose-500 to-orange-500 text-white shadow-2xl transition-all duration-300 flex items-center justify-center ${
+        className={`md:hidden fixed bottom-6 right-6 z-[70] w-11 h-11 rounded-full bg-gradient-to-r from-rose-500 to-orange-500 text-white shadow-2xl transition-all duration-300 flex items-center justify-center ${
           isMenuOpen ? 'rotate-90 scale-110' : 'rotate-0 scale-100'
         } hover:scale-110 active:scale-95`}
       >
